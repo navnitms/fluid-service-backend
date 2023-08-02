@@ -1,0 +1,57 @@
+enum Priority {
+    LOW
+    MEDIUM
+    HIGH
+    VERY_HIGH
+}
+
+enum IncidentStatus {
+  CREATED
+  ESCALATED
+  IN_PROGRESS
+  ADMIN_IN_PROGRESS
+  RESOLVED
+  REOPENED
+}
+
+enum IncidentOperation {
+  INCIDENT_CREATED
+  INCIDENT_UPDATED
+  INCIDENT_ESCALATED
+  INCIDENT_ADMIN_ACKNOWLEDGED
+  INCIDENT_ACKNOWLEDGED
+  INCIDENT_RESOLVED
+  INCIDENT_REOPENED
+  INCIDENT_ASSIGNED
+  INCIDENT_TITLE_UPDATED
+  INCIDENT_DESCRIPTION_UPDATED
+  INCIDENT_PRIORITY_UPDATED
+}
+
+
+input CreateIncidentInput {
+    title: String!
+    description: String!
+    priority: Priority
+    categoryId: ID!
+}
+
+type Incident {
+    id: ID!
+    title: String!
+    description: String!
+    priority: Priority!
+    status: IncidentStatus!
+    category: Category!
+    tenant: Tenant!
+    createdBy: User!
+    assignee: User
+    acknowlegedBy: User
+    comments: [Comment]
+    logs: [IncidentLog]
+}
+
+type Mutation {
+	createIncident(input: CreateIncidentInput!): Incident
+}
+

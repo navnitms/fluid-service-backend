@@ -1,0 +1,33 @@
+type Address {
+  id: ID
+  value: String
+  pincode: Int
+  district: District
+}
+
+type District {
+  id: ID!
+  name: String
+  stateId: ID
+  state: State
+}
+
+type State {
+  id: ID!
+  name: String
+  isDisabled: Boolean
+}
+
+input AddressInput {
+  value: String!
+  pincode: Int
+  districtId: ID!
+}
+
+input DistrictInput {
+  id: String
+}
+
+input StateInput {
+  id: String
+}

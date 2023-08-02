@@ -1,0 +1,73 @@
+version: "3.9"
+services:
+  postgres:
+    container_name: fluid_pstgres_revamp
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=fluid-dev-user
+      - POSTGRES_PASSWORD=fluid-dev-password
+      - POSTGRES_DB=fluid-db
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    volumes:
+      - postgresdata:/data/postgres
+      - postgresdbdata:/var/lib/postgresql/data
+    networks:
+      - fluidnet
+
+  redis:
+    container_name: cache
+    image: redislabs/rebloom:latest
+    expose:
+      - '6379'
+    ports:
+      - '6378:6379'
+    environment:
+      - REDIS_PORT=6379
+    networks:
+      - fluidnet
+
+  localstack:
+    image: localstack/localstack:latest
+    environment: 
+      - AWS_DEFAULT_REGION=ap-south-1
+      - EDGE_PORT=4566
+      - SERVICES=s3,sqs
+      - PORT_WEB_UI=4599
+    ports:
+       - "4566-4583:4566-4583"
+       - "4599:4599"
+    volumes: 
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      
+  setup-resources:
+    image: amazon/aws-cli
+    environment:
+      - AWS_ACCESS_KEY_ID=AKIAEXAMPLE123
+      - AWS_SECRET_ACCESS_KEY=AWSSECRETACCESSEY123
+      - AWS_DEFAULT_REGION=us-east-1
+    entrypoint: /bin/sh -c
+    command: >
+      "
+       sleep 10
+       aws --endpoint-url=http://localstack:4566 s3 mb s3://master
+      "
+    depends_on:
+      - localstack  
+
+volumes:
+  postgresdata:
+    driver: local
+  postgresdbdata:
+    driver: local
+  pgadmindata:
+    driver: local
+  pgadminlibdata:
+    driver: local
+
+networks:
+  fluidnet:
+    driver: bridge

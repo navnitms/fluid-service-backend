@@ -1,0 +1,18 @@
+input TenantNotesInput {
+	tenantId: ID!
+	remark: String!
+}
+
+type TenantNotes {
+	id: ID!
+	remark: String!
+    createdAt: DateTime
+}
+
+type Mutation {
+	createTenantNotes(input: TenantNotesInput!): TenantNotes
+}
+
+type Query {
+	getTenantNotes(id: ID!): [TenantNotes]
+}
