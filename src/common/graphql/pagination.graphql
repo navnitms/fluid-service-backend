@@ -1,0 +1,9 @@
+input Pagination {
+  offset: Int
+  limit: Int
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}

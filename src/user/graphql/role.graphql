@@ -1,0 +1,10 @@
+type Role {
+	id: ID
+	name: String
+	active: Boolean
+}
+
+
+type Query {
+    getAllRoles: [Role]!
+}

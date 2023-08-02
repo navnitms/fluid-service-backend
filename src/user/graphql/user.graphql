@@ -1,0 +1,50 @@
+enum UserStatus {
+  INITIATED
+  INVITED
+  ACTIVE
+  INACTIVE
+  FAILED
+} 
+
+enum UserRoles {
+  SUPER_ADMIN
+  ENGINEER
+  SUPPORT
+  OWNER
+  TENANT_ADMIN
+  EMPLOYEE
+  TEAMLEAD
+}
+
+input UserInput {
+    name: String!
+    email: String!
+    password: String!
+    tenantId: ID!
+    roleId: ID!
+}
+
+type UserWithToken {
+    id: ID!
+    name: String!
+    email: String!
+    status: UserStatus!
+    refreshToken: String
+    inviteToken:String
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    status: UserStatus!
+    role: Role
+}
+
+type Mutation {
+	createUser(input: UserInput!): User
+}
+
+type Query {
+    getAllUsers(tenantId: ID!, pagination: Pagination): [User]
+}

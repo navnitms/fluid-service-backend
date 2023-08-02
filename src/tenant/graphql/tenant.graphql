@@ -1,0 +1,51 @@
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+type TenantCategory {
+	id: ID!
+	name: String!
+}
+
+type TenantSettings {
+	id: ID!
+	replyToEmail: String!
+	autoEscalation: Boolean
+}
+
+type Tenant {
+  id: ID!
+  name: String!
+  category: TenantCategory!
+	address: Address
+  settings: TenantSettings
+  notes: [TenantNotes]
+}
+
+type Test {
+    current: String!
+    previous: String!
+}
+
+input TenantInput {
+  name: String!
+  categoryId: ID!
+	replyToEmail: String!
+	autoEscalation: Boolean
+	address: AddressInput!
+}
+
+input TenantFilter {
+	searchTerm: String
+	categoryId: ID
+}
+
+type Mutation {
+	createTenant(input: TenantInput!): Tenant
+}
+
+type Query {
+	getTenantDetails(id: ID!): Tenant
+	getAllTenants(input: TenantFilter, pagination: Pagination): [Tenant]
+}

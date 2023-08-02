@@ -1,0 +1,5 @@
+type IncidentLog{
+  id: ID!
+	user: User!
+	operation: IncidentOperation!
+}
