@@ -15,7 +15,7 @@ import { AbstractEntity } from '../../common/models/AbstractEntity';
   where: `"deleted_at" IS NULL`,
 })
 @Entity()
-class Comment extends AbstractEntity {
+export class Comment extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   public id!: string;
 
@@ -46,5 +46,3 @@ class Comment extends AbstractEntity {
   @JoinColumn({ referencedColumnName: 'id', name: 'user_id' })
   public user!: User;
 }
-
-export default Comment;

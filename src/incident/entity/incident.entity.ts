@@ -12,7 +12,7 @@ import { Category } from './category.entity';
 import { Tenant } from '../../tenant/entity/tenant.entity';
 import { User } from '../../user/entity/user.entity';
 import { AbstractEntity } from '../../common/models/AbstractEntity';
-import Comment from './comment.entity';
+import { Comment } from './comment.entity';
 import { IncidentLog } from './incident.log.entity';
 
 @Entity()

@@ -1,0 +1,7 @@
+type ContractProduct {
+    contract: Contract
+    product: Product
+    remark: String
+    count: Int
+    productAmount: Int
+}

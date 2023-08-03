@@ -48,6 +48,8 @@ type Incident {
     assignee: User
     acknowlegedBy: User
     comments: [Comment]
+    createdAt: DateTime
+    deletedAt: DateTime
     logs: [IncidentLog]
 }
 
@@ -55,3 +57,6 @@ type Mutation {
 	createIncident(input: CreateIncidentInput!): Incident
 }
 
+type Query {
+  getAllIncidents(tenantId: ID!, pagination: Pagination): [Incident]
+}
