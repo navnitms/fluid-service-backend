@@ -18,7 +18,7 @@ const migrationConfig = {
   ],
   synchronize: false,
   namingStrategy: new SnakeNamingStrategy(),
-  ssl: false,
+  ssl: true,
 } as DataSourceOptions;
 
 export default migrationConfig;
