@@ -8,7 +8,7 @@ export default TypeOrmModule.forRootAsync({
   imports: [CommonModule],
   inject: [ConfigService],
   async useFactory(config: ConfigService) {
-    const { type, database, username, password, host, port, logging } =
+    const { type, database, username, password, host, port } =
       config.get<DbConfig>('db');
     return {
       type,

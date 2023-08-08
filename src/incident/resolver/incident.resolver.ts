@@ -53,6 +53,17 @@ export class IncidentResolver {
     );
   }
 
+  @Query()
+  getIncidentById(
+    @Args('tenantId') tenantId: string,
+    @Args('incidentId') incidentId: string,
+  ): Promise<Incident> {
+    return this.incidentService.getIncidentById(
+      incidentId,
+      '2fc6cb8f-0a91-4d51-864a-aac61b2bd25b',
+    );
+  }
+
   @ResolveField()
   async createdBy(@Parent() incident: IncidentEntity) {
     if (incident.createdById) {

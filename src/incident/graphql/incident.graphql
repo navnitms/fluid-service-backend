@@ -59,4 +59,5 @@ type Mutation {
 
 type Query {
   getAllIncidents(tenantId: ID!, pagination: Pagination): [Incident]
+  getIncidentById( incidentId: ID!, tenantId: ID): Incident!
 }

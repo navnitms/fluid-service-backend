@@ -9,6 +9,7 @@ import { IncidentLogLoader } from './loader/incident.log.loader';
 import { IncidentLogResolver } from './resolver/incident.log.resolver';
 import { IncidentCommentLoader } from './loader/incident.comment.loader';
 import { CommentService } from './service/comment.service';
+import { CommentResolver } from './resolver/comment.resolver';
 
 @Module({
   imports: [CommonModule, UserModule, TenantModule],
@@ -20,6 +21,7 @@ import { CommentService } from './service/comment.service';
     IncidentLogResolver,
     IncidentCommentLoader,
     CommentService,
+    CommentResolver,
   ],
   exports: [],
 })

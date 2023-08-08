@@ -65,4 +65,10 @@ export class IncidentService {
     query.orderBy('incident.createdAt', 'DESC');
     return query.getMany();
   }
+
+  async getIncidentById(id: string, tenantId?: string) {
+    return this.dataSource
+      .getRepository(Incident)
+      .findOneOrFail({ where: { id, tenantId } });
+  }
 }

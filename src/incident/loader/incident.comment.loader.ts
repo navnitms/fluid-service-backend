@@ -11,13 +11,13 @@ export class IncidentCommentLoader {
     private readonly incidentCommentService: CommentService,
   ) {
     this.incidentCommentLoader = new DataLoader<string, Comment[]>(
-      this.getIncidentCommentsByPollIds,
+      this.getIncidentCommentsByIncidentIds,
     );
   }
 
-  getIncidentCommentsByPollIds = async (incidentIds: readonly string[]) => {
+  getIncidentCommentsByIncidentIds = async (incidentIds: readonly string[]) => {
     const incidentComments =
-      await this.incidentCommentService.getCommentsByIncidentId([
+      await this.incidentCommentService.getCommentsByIncidentIds([
         ...incidentIds,
       ]);
 

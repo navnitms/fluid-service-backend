@@ -3,3 +3,16 @@ type Comment {
     text: String!
     user: User!
 }
+
+input CreateCommentInput {
+    incidentId: ID!
+    text: String!
+}
+
+type Query {
+    getCommentsForIncident(incidentId: ID!, pagination: Pagination): [Comment]!
+}
+
+type Mutation {
+    createComment(input: CreateCommentInput!): Comment!
+}
