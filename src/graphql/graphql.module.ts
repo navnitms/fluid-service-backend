@@ -11,6 +11,7 @@ dotenv.config();
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: process.env.ENV == 'production' ? false : true,
+      introspection: true,
       useGlobalPrefix: true,
       typePaths: ['./**/*.graphql'],
       definitions: {
