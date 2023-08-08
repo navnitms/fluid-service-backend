@@ -20,6 +20,9 @@
     "migrate": "npm run typeorm migration:run -- -d ./migrations/config/migration.config.ts",
     "rollback": "npm run build && npm run typeorm -- -d ./migrations/config/migration.config.ts migration:revert"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "dependencies": {
     "@apollo/server": "^4.9.0",
     "@nestjs/apollo": "^12.0.7",

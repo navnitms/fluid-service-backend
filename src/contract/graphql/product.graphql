@@ -1,0 +1,13 @@
+type Product {
+    id: ID!
+    name: String!
+    isVisible: Boolean!
+}
+
+input CreateProductInput {
+    name: String!
+}
+
+type Mutation {
+	createProduct(input: CreateProductInput!): Product
+}

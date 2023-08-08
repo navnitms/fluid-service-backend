@@ -9,7 +9,7 @@ import {
 import { Pagination, User, UserInput } from 'src/schema/graphql.schema';
 import { User as UserEntity } from '../entity/user.entity';
 import { UserService } from '../service/user.service';
-import { Inject } from '@nestjs/common';
+import { Inject, ParseUUIDPipe } from '@nestjs/common';
 import UserRoleLoader from '../loader/user.role.loader';
 
 @Resolver('User')
@@ -25,12 +25,22 @@ export class UserResolver {
     return this.userService.create(userInput.tenantId, userInput);
   }
 
+  @Mutation()
+  deleteUser(@Args('id', ParseUUIDPipe) userId: string): Promise<string> {
+    return this.userService.deleteUser(userId);
+  }
+
   @Query()
   getAllUsers(
     @Args('tenantId') id: string,
     @Args('pagination') pagination: Pagination,
   ): Promise<User[]> {
     return this.userService.getUsersByTenantId(id, pagination);
+  }
+
+  @Query()
+  getUserById(@Args('id', ParseUUIDPipe) userId: string): Promise<User> {
+    return this.userService.getUserById(userId);
   }
 
   @ResolveField()

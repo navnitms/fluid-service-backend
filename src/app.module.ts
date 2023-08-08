@@ -6,6 +6,7 @@ import { LoggerMiddleware } from './common/middlewares/logging.middleware';
 import { CommonModule } from './common/common.module';
 import { UserModule } from './user/user.module';
 import { IncidentModule } from './incident/incident.module';
+import { ContractModule } from './contract/contract.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { IncidentModule } from './incident/incident.module';
     CommonModule,
     UserModule,
     IncidentModule,
+    ContractModule,
   ],
   controllers: [],
   providers: [],

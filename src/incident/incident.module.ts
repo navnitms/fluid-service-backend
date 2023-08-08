@@ -7,6 +7,9 @@ import { TenantModule } from 'src/tenant/tenant.module';
 import { IncidentLogService } from './service/incident.log.service';
 import { IncidentLogLoader } from './loader/incident.log.loader';
 import { IncidentLogResolver } from './resolver/incident.log.resolver';
+import { IncidentCommentLoader } from './loader/incident.comment.loader';
+import { CommentService } from './service/comment.service';
+import { CommentResolver } from './resolver/comment.resolver';
 
 @Module({
   imports: [CommonModule, UserModule, TenantModule],
@@ -16,6 +19,9 @@ import { IncidentLogResolver } from './resolver/incident.log.resolver';
     IncidentLogLoader,
     IncidentLogService,
     IncidentLogResolver,
+    IncidentCommentLoader,
+    CommentService,
+    CommentResolver,
   ],
   exports: [],
 })

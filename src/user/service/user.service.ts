@@ -60,6 +60,14 @@ export class UserService {
     return saveduser;
   }
 
+  async deleteUser(id: string) {
+    await this.dataSource.getRepository(User).softDelete({
+      id,
+    });
+
+    return 'Success';
+  }
+
   async getUserIds(ids?: string[], relations?: string[]): Promise<User[]> {
     let where;
     ids && (where = { id: In(ids) });
@@ -70,10 +78,19 @@ export class UserService {
     });
   }
 
-  async getUserByUserIdsWithDeleted(ids: string[]): Promise<User[]> {
+  async getUserByUserIdsWithDeleted(
+    ids: string[],
+    withDeleted = true,
+  ): Promise<User[]> {
     return this.dataSource.getRepository(User).find({
       where: { id: In(ids) },
-      withDeleted: true,
+      withDeleted,
+    });
+  }
+
+  async getUserById(id: string): Promise<User> {
+    return this.dataSource.getRepository(User).findOneByOrFail({
+      id,
     });
   }
 

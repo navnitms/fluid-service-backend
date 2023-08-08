@@ -5,12 +5,18 @@ import {
   Parent,
   ResolveField,
   Resolver,
+  Query,
 } from '@nestjs/graphql';
 import { IncidentService } from '../service/incident.service';
-import { CreateIncidentInput, Incident } from 'src/schema/graphql.schema';
+import {
+  CreateIncidentInput,
+  Incident,
+  Pagination,
+} from 'src/schema/graphql.schema';
 import { Incident as IncidentEntity } from '../../incident/entity/incident.entity';
 import UserLoader from 'src/user/loader/user.loader';
 import { IncidentLogLoader } from '../loader/incident.log.loader';
+import { IncidentCommentLoader } from '../loader/incident.comment.loader';
 
 @Resolver('Incident')
 export class IncidentResolver {
@@ -21,6 +27,8 @@ export class IncidentResolver {
     private readonly userLoader: UserLoader,
     @Inject(IncidentLogLoader)
     private readonly incidentLogLoader: IncidentLogLoader,
+    @Inject(IncidentCommentLoader)
+    private readonly incidentCommentLoader: IncidentCommentLoader,
   ) {}
 
   @Mutation()
@@ -31,6 +39,28 @@ export class IncidentResolver {
       '992a74e5-a01d-4a5a-8ba7-007bd12ebb04',
       '2fc6cb8f-0a91-4d51-864a-aac61b2bd25b',
       incidentInput,
+    );
+  }
+
+  @Query()
+  getAllIncidents(
+    @Args('tenantId') id: string,
+    @Args('pagination') pagination: Pagination,
+  ): Promise<Incident[]> {
+    return this.incidentService.getIncidentByTenantId(
+      '2fc6cb8f-0a91-4d51-864a-aac61b2bd25b',
+      pagination,
+    );
+  }
+
+  @Query()
+  getIncidentById(
+    @Args('tenantId') tenantId: string,
+    @Args('incidentId') incidentId: string,
+  ): Promise<Incident> {
+    return this.incidentService.getIncidentById(
+      incidentId,
+      '2fc6cb8f-0a91-4d51-864a-aac61b2bd25b',
     );
   }
 
@@ -55,5 +85,12 @@ export class IncidentResolver {
   @ResolveField()
   async logs(@Parent() incident: IncidentEntity) {
     return this.incidentLogLoader.getIncidentLogLoader().load(incident.id);
+  }
+
+  @ResolveField()
+  async comments(@Parent() incident: IncidentEntity) {
+    return this.incidentCommentLoader
+      .getIncidentCommentLoader()
+      .load(incident.id);
   }
 }

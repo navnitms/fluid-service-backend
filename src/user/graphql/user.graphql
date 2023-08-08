@@ -24,6 +24,11 @@ input UserInput {
     roleId: ID!
 }
 
+input login {
+  email: String
+  password: String
+}
+
 type UserWithToken {
     id: ID!
     name: String!
@@ -43,8 +48,10 @@ type User {
 
 type Mutation {
 	createUser(input: UserInput!): User
+  deleteUser(id: ID!): String
 }
 
 type Query {
-    getAllUsers(tenantId: ID!, pagination: Pagination): [User]
+  getAllUsers(tenantId: ID!, pagination: Pagination): [User]
+  getUserById(id: ID!): User!
 }

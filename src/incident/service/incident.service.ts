@@ -5,6 +5,7 @@ import {
   CreateIncidentInput,
   IncidentOperation,
   IncidentStatus,
+  Pagination,
 } from 'src/schema/graphql.schema';
 import { IncidentLog } from '../entity/incident.log.entity';
 import { v4 } from 'uuid';
@@ -45,5 +46,29 @@ export class IncidentService {
       },
     );
     return savedIncident;
+  }
+
+  async getIncidentByTenantId(
+    tenantId: string,
+    pagination: Pagination,
+  ): Promise<Incident[]> {
+    const query = this.dataSource
+      .getRepository(Incident)
+      .createQueryBuilder('incident')
+      .where('incident.tenantId = :tenantId', {
+        tenantId,
+      });
+    if (pagination) {
+      query.offset(pagination.offset);
+      query.limit(pagination.limit);
+    }
+    query.orderBy('incident.createdAt', 'DESC');
+    return query.getMany();
+  }
+
+  async getIncidentById(id: string, tenantId?: string) {
+    return this.dataSource
+      .getRepository(Incident)
+      .findOneOrFail({ where: { id, tenantId } });
   }
 }

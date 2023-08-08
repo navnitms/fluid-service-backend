@@ -13,6 +13,14 @@ export enum SortDirection {
     DESC = "DESC"
 }
 
+export enum ContractStatus {
+    SCHEDULED = "SCHEDULED",
+    ACTIVE = "ACTIVE",
+    EXPIRED = "EXPIRED",
+    COMPLETED = "COMPLETED",
+    TERMINATED = "TERMINATED"
+}
+
 export enum Priority {
     LOW = "LOW",
     MEDIUM = "MEDIUM",
@@ -71,6 +79,24 @@ export interface Pagination {
     limit?: Nullable<number>;
 }
 
+export interface CreateContractInput {
+    tenantId: string;
+    startDate: DateTime;
+    endDate: DateTime;
+    remark?: Nullable<string>;
+    amount?: Nullable<number>;
+    contractProductIds?: Nullable<Nullable<string>[]>;
+}
+
+export interface CreateProductInput {
+    name: string;
+}
+
+export interface CreateCommentInput {
+    incidentId: string;
+    text: string;
+}
+
 export interface CreateIncidentInput {
     title: string;
     description: string;
@@ -118,6 +144,61 @@ export interface UserInput {
     roleId: string;
 }
 
+export interface Login {
+    email?: Nullable<string>;
+    password?: Nullable<string>;
+}
+
+export interface Contract {
+    id: string;
+    tenant: Tenant;
+    startDate: DateTime;
+    endDate: DateTime;
+    status: ContractStatus;
+    paymentDate?: Nullable<DateTime>;
+    remark?: Nullable<string>;
+    amount?: Nullable<number>;
+    contractProducts?: Nullable<Nullable<ContractProduct>[]>;
+}
+
+export interface IMutation {
+    createContract(input: CreateContractInput): Nullable<Contract> | Promise<Nullable<Contract>>;
+    createProduct(input: CreateProductInput): Nullable<Product> | Promise<Nullable<Product>>;
+    createComment(input: CreateCommentInput): Comment | Promise<Comment>;
+    createIncident(input: CreateIncidentInput): Nullable<Incident> | Promise<Nullable<Incident>>;
+    createTenant(input: TenantInput): Nullable<Tenant> | Promise<Nullable<Tenant>>;
+    createTenantNotes(input: TenantNotesInput): Nullable<TenantNotes> | Promise<Nullable<TenantNotes>>;
+    createUser(input: UserInput): Nullable<User> | Promise<Nullable<User>>;
+    deleteUser(id: string): Nullable<string> | Promise<Nullable<string>>;
+}
+
+export interface IQuery {
+    getAllContracts(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<Contract>[]> | Promise<Nullable<Nullable<Contract>[]>>;
+    getCommentsForIncident(incidentId: string, pagination?: Nullable<Pagination>): Nullable<Comment>[] | Promise<Nullable<Comment>[]>;
+    getAllIncidents(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<Incident>[]> | Promise<Nullable<Nullable<Incident>[]>>;
+    getIncidentById(incidentId: string, tenantId?: Nullable<string>): Incident | Promise<Incident>;
+    getTenantDetails(id: string): Nullable<Tenant> | Promise<Nullable<Tenant>>;
+    getAllTenants(input?: Nullable<TenantFilter>, pagination?: Nullable<Pagination>): Nullable<Nullable<Tenant>[]> | Promise<Nullable<Nullable<Tenant>[]>>;
+    getTenantNotes(id: string): Nullable<Nullable<TenantNotes>[]> | Promise<Nullable<Nullable<TenantNotes>[]>>;
+    getAllRoles(): Nullable<Role>[] | Promise<Nullable<Role>[]>;
+    getAllUsers(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
+    getUserById(id: string): User | Promise<User>;
+}
+
+export interface ContractProduct {
+    contract?: Nullable<Contract>;
+    product?: Nullable<Product>;
+    remark?: Nullable<string>;
+    count?: Nullable<number>;
+    productAmount?: Nullable<number>;
+}
+
+export interface Product {
+    id: string;
+    name: string;
+    isVisible: boolean;
+}
+
 export interface Category {
     id: string;
     name: string;
@@ -142,14 +223,9 @@ export interface Incident {
     assignee?: Nullable<User>;
     acknowlegedBy?: Nullable<User>;
     comments?: Nullable<Nullable<Comment>[]>;
+    createdAt?: Nullable<DateTime>;
+    deletedAt?: Nullable<DateTime>;
     logs?: Nullable<Nullable<IncidentLog>[]>;
-}
-
-export interface IMutation {
-    createIncident(input: CreateIncidentInput): Nullable<Incident> | Promise<Nullable<Incident>>;
-    createTenant(input: TenantInput): Nullable<Tenant> | Promise<Nullable<Tenant>>;
-    createTenantNotes(input: TenantNotesInput): Nullable<TenantNotes> | Promise<Nullable<TenantNotes>>;
-    createUser(input: UserInput): Nullable<User> | Promise<Nullable<User>>;
 }
 
 export interface IncidentLog {
@@ -201,14 +277,6 @@ export interface Tenant {
 export interface Test {
     current: string;
     previous: string;
-}
-
-export interface IQuery {
-    getTenantDetails(id: string): Nullable<Tenant> | Promise<Nullable<Tenant>>;
-    getAllTenants(input?: Nullable<TenantFilter>, pagination?: Nullable<Pagination>): Nullable<Nullable<Tenant>[]> | Promise<Nullable<Nullable<Tenant>[]>>;
-    getTenantNotes(id: string): Nullable<Nullable<TenantNotes>[]> | Promise<Nullable<Nullable<TenantNotes>[]>>;
-    getAllRoles(): Nullable<Role>[] | Promise<Nullable<Role>[]>;
-    getAllUsers(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
 }
 
 export interface TenantNotes {

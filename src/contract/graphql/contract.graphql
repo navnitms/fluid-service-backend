@@ -1,0 +1,36 @@
+enum ContractStatus {
+  SCHEDULED
+  ACTIVE
+  EXPIRED
+  COMPLETED
+  TERMINATED
+}
+
+input CreateContractInput {
+  tenantId: ID!
+  startDate: DateTime!
+  endDate: DateTime!
+  remark: String
+  amount: Int
+  contractProductIds: [String]
+}
+
+type Contract {
+  id: ID!
+  tenant: Tenant!
+  startDate: DateTime!
+  endDate: DateTime!
+  status: ContractStatus!
+  paymentDate: DateTime
+  remark: String
+  amount: Int
+  contractProducts: [ContractProduct]
+}
+
+type Mutation {
+	createContract(input: CreateContractInput!): Contract
+}
+
+type Query {
+  getAllContracts(tenantId: ID!, pagination: Pagination): [Contract]
+}
