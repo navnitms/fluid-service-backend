@@ -24,7 +24,7 @@ export default TypeOrmModule.forRootAsync({
       synchronize: false,
       logging: ['error', 'query'],
       namingStrategy: new SnakeNamingStrategy(),
-      ssl: false,
+      ssl: true,
     };
   },
 } as TypeOrmModuleOptions);
