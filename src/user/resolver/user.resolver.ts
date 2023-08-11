@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -11,6 +12,7 @@ import { User as UserEntity } from '../entity/user.entity';
 import { UserService } from '../service/user.service';
 import { Inject, ParseUUIDPipe } from '@nestjs/common';
 import UserRoleLoader from '../loader/user.role.loader';
+import { Permissions } from 'src/auth/decorator/permission.decorator';
 
 @Resolver('User')
 export class UserResolver {
@@ -30,6 +32,7 @@ export class UserResolver {
     return this.userService.deleteUser(userId);
   }
 
+  @Permissions('view-all-users')
   @Query()
   getAllUsers(
     @Args('tenantId') id: string,
