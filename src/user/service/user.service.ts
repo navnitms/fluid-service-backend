@@ -4,14 +4,25 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { DataSource, DeepPartial, EntityManager, In } from 'typeorm';
 import { User } from '../entity/user.entity';
-import { hash } from 'src/common/utils/password.util';
+import { comparePass, hash } from 'src/common/utils/password.util';
 import { v4 } from 'uuid';
 import { RoleService } from './role.service';
 import { configuration } from 'src/common/config/app.config';
-import { Pagination, UserInput, UserRoles } from 'src/schema/graphql.schema';
+import {
+  OperationType,
+  Pagination,
+  UserInput,
+  UserRoles,
+} from 'src/schema/graphql.schema';
+import { RolePermissionService } from './role.permission.service';
+import RolePermission from '../entity/role.permission.entity';
+import { PermissionService } from './permission.service';
+import Role from '../entity/role.entity';
+import { PermissionNotFoundException } from 'src/auth/exception/auth.exception';
 
 @Injectable()
 export class UserService {
@@ -21,6 +32,10 @@ export class UserService {
     private readonly dataSource: DataSource,
     @Inject(RoleService)
     private readonly roleService: RoleService,
+    @Inject(PermissionService)
+    private readonly permissionService: PermissionService,
+    @Inject(RolePermissionService)
+    private readonly rolePermissionService: RolePermissionService,
   ) {}
 
   async create(tenantId: string, userInput: UserInput) {
@@ -148,5 +163,97 @@ export class UserService {
     ) {
       throw new BadRequestException('Invalid Request');
     }
+  }
+
+  async loginUser(email: string, password: string) {
+    let user: User;
+    try {
+      const userRepository = this.dataSource.getRepository(User);
+      user = await userRepository.findOneOrFail({
+        where: { email },
+      });
+      if (!(await comparePass(password, user.password))) {
+        throw new NotFoundException('Invalid Email Or Password');
+      }
+      return user;
+    } catch (error) {
+      throw new NotFoundException('Invalid Email Or Password');
+    }
+  }
+
+  async verifyAndFetchUserPermissions(
+    id: string,
+    permissionToVerify: string[],
+    operation: OperationType = OperationType.AND,
+  ): Promise<{ verified: boolean; userPermissions: string[] }> {
+    const allPermissionsOfUser = await this.getAllUserpermissionIds(id);
+    const verified = await this.verifyUserPermissions(
+      id,
+      permissionToVerify,
+      operation,
+      allPermissionsOfUser,
+    );
+    return {
+      verified,
+      userPermissions: [...allPermissionsOfUser],
+    };
+  }
+
+  async verifyUserPermissions(
+    id: string,
+    permissionToVerify: string[],
+    operation: OperationType = OperationType.AND,
+    allPermissionsOfUser?: Set<string>,
+  ): Promise<boolean> {
+    const permissionsRequired = (
+      await Promise.all(
+        permissionToVerify.map((p) =>
+          this.permissionService.getPermissionByName(p),
+        ),
+      )
+    ).flat(1);
+
+    if (permissionsRequired.length !== permissionToVerify.length) {
+      const validPermissions = new Set(permissionsRequired.map((p) => p.name));
+      throw new PermissionNotFoundException(
+        permissionToVerify.filter((p) => !validPermissions.has(p)).toString(),
+      );
+    }
+    allPermissionsOfUser = allPermissionsOfUser
+      ? allPermissionsOfUser
+      : await this.getAllUserpermissionIds(id);
+    if (!allPermissionsOfUser) {
+      allPermissionsOfUser = new Set();
+    }
+    const requiredPermissionsWithUser = permissionsRequired
+      .map((x) => x.id)
+      .filter((x) => (allPermissionsOfUser as Set<string>).has(x));
+    switch (operation) {
+      case OperationType.AND:
+        return (
+          permissionsRequired.length > 0 &&
+          requiredPermissionsWithUser.length === permissionsRequired.length
+        );
+      case OperationType.OR:
+        return requiredPermissionsWithUser.length > 0;
+      default:
+        return false;
+    }
+  }
+
+  private async getUserRoleByUserId(userId: string): Promise<Role> {
+    const user = await this.dataSource
+      .getRepository(User)
+      .findOne({ where: { id: userId }, relations: ['role'] });
+    return user.role;
+  }
+
+  private async getAllUserpermissionIds(id: string): Promise<Set<string>> {
+    const userGroup = await this.getUserRoleByUserId(id);
+    const groupPermissions: RolePermission[] = (
+      await this.rolePermissionService.getPermissionByRoleId(userGroup.id)
+    ).flat(1);
+    const permissionIds = groupPermissions.map((x) => x.permissionId);
+    return new Set(permissionIds);
   }
 }

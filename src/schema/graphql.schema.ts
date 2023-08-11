@@ -8,6 +8,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export enum OperationType {
+    AND = "AND",
+    OR = "OR"
+}
+
 export enum SortDirection {
     ASC = "ASC",
     DESC = "DESC"
@@ -72,6 +77,11 @@ export enum UserRoles {
     TENANT_ADMIN = "TENANT_ADMIN",
     EMPLOYEE = "EMPLOYEE",
     TEAMLEAD = "TEAMLEAD"
+}
+
+export interface LoginInput {
+    email: string;
+    password: string;
 }
 
 export interface Pagination {
@@ -149,6 +159,28 @@ export interface Login {
     password?: Nullable<string>;
 }
 
+export interface Token {
+    accessToken?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+}
+
+export interface Authentication {
+    user?: Nullable<User>;
+    token?: Nullable<Token>;
+}
+
+export interface IMutation {
+    login(input: LoginInput): Nullable<Authentication> | Promise<Nullable<Authentication>>;
+    createContract(input: CreateContractInput): Nullable<Contract> | Promise<Nullable<Contract>>;
+    createProduct(input: CreateProductInput): Nullable<Product> | Promise<Nullable<Product>>;
+    createComment(input: CreateCommentInput): Comment | Promise<Comment>;
+    createIncident(input: CreateIncidentInput): Nullable<Incident> | Promise<Nullable<Incident>>;
+    createTenant(input: TenantInput): Nullable<Tenant> | Promise<Nullable<Tenant>>;
+    createTenantNotes(input: TenantNotesInput): Nullable<TenantNotes> | Promise<Nullable<TenantNotes>>;
+    createUser(input: UserInput): Nullable<User> | Promise<Nullable<User>>;
+    deleteUser(id: string): Nullable<string> | Promise<Nullable<string>>;
+}
+
 export interface Contract {
     id: string;
     tenant: Tenant;
@@ -159,17 +191,6 @@ export interface Contract {
     remark?: Nullable<string>;
     amount?: Nullable<number>;
     contractProducts?: Nullable<Nullable<ContractProduct>[]>;
-}
-
-export interface IMutation {
-    createContract(input: CreateContractInput): Nullable<Contract> | Promise<Nullable<Contract>>;
-    createProduct(input: CreateProductInput): Nullable<Product> | Promise<Nullable<Product>>;
-    createComment(input: CreateCommentInput): Comment | Promise<Comment>;
-    createIncident(input: CreateIncidentInput): Nullable<Incident> | Promise<Nullable<Incident>>;
-    createTenant(input: TenantInput): Nullable<Tenant> | Promise<Nullable<Tenant>>;
-    createTenantNotes(input: TenantNotesInput): Nullable<TenantNotes> | Promise<Nullable<TenantNotes>>;
-    createUser(input: UserInput): Nullable<User> | Promise<Nullable<User>>;
-    deleteUser(id: string): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export interface IQuery {

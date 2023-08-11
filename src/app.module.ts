@@ -7,6 +7,7 @@ import { CommonModule } from './common/common.module';
 import { UserModule } from './user/user.module';
 import { IncidentModule } from './incident/incident.module';
 import { ContractModule } from './contract/contract.module';
+import { AuthenticationModule } from './auth/authentication.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ContractModule } from './contract/contract.module';
     UserModule,
     IncidentModule,
     ContractModule,
+    AuthenticationModule,
   ],
   controllers: [],
   providers: [],

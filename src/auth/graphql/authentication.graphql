@@ -1,0 +1,23 @@
+input LoginInput {
+    email: String!
+    password: String!
+}
+
+type Token {
+    accessToken: String
+    refreshToken: String
+}
+
+type Authentication {
+    user: User
+    token: Token
+}
+
+enum OperationType {
+    AND
+    OR
+}
+
+type Mutation {
+	login(input: LoginInput!): Authentication
+}
