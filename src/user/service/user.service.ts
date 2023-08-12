@@ -39,40 +39,47 @@ export class UserService {
   ) {}
 
   async create(tenantId: string, userInput: UserInput) {
-    this.logger.log(`Creating ${userInput.email} user for tenant: ${tenantId}`);
+    try {
+      this.logger.log(
+        `Creating ${userInput.email} user for tenant: ${tenantId}`,
+      );
 
-    const { name, email, password, roleId } = userInput;
-    const hashPassword = await hash(password);
+      const { name, email, password, roleId } = userInput;
+      const hashPassword = await hash(password);
 
-    const roleEntity = roleId
-      ? await this.roleService.getById(roleId)
-      : undefined;
+      const roleEntity = roleId
+        ? await this.roleService.getById(roleId)
+        : undefined;
 
-    const user: DeepPartial<User> = {
-      tenantId,
-      name,
-      email,
-      id: v4(),
-      password: hashPassword,
-      role: roleEntity,
-    };
+      const user: DeepPartial<User> = {
+        tenantId,
+        name,
+        email,
+        id: v4(),
+        password: hashPassword,
+        role: roleEntity,
+      };
 
-    const roleDetails = await this.roleService.getById(roleId);
-    await this.createUserSupportedRoleCheck(
-      UserRoles[roleDetails.name],
-      tenantId,
-    );
+      const roleDetails = await this.roleService.getById(roleId);
+      await this.createUserSupportedRoleCheck(
+        UserRoles[roleDetails.name],
+        tenantId,
+      );
 
-    const saveduser = await this.dataSource.transaction(
-      async (transactionalEntityManager: EntityManager) => {
-        const userRepository = transactionalEntityManager.getRepository(User);
+      const saveduser = await this.dataSource.transaction(
+        async (transactionalEntityManager: EntityManager) => {
+          const userRepository = transactionalEntityManager.getRepository(User);
 
-        const newUser = userRepository.create(user);
-        await userRepository.save(user);
-        return newUser;
-      },
-    );
-    return saveduser;
+          const newUser = userRepository.create(user);
+          await userRepository.save(user);
+          return newUser;
+        },
+      );
+      return saveduser;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 
   async deleteUser(id: string) {
