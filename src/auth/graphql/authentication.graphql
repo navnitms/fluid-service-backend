@@ -9,8 +9,9 @@ type Token {
 }
 
 type Authentication {
-    user: User
-    token: Token
+    user: User!
+    token: Token!
+    permissions: [PermissionType]
 }
 
 enum OperationType {

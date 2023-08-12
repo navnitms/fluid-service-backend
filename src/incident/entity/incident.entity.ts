@@ -86,4 +86,7 @@ export class Incident extends AbstractEntity {
   )
   @JoinColumn()
   public incidentLogs?: IncidentLog[];
+
+  @Column({ type: 'tsvector', nullable: true })
+  searchTerm?: string;
 }

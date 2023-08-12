@@ -3,15 +3,17 @@ import { DataSource, DeepPartial, EntityManager } from 'typeorm';
 import { Incident } from '../entity/incident.entity';
 import {
   CreateIncidentInput,
+  GetIncidentFilter,
   IncidentOperation,
   IncidentStatus,
   Pagination,
-  UserRoles,
 } from 'src/schema/graphql.schema';
 import { IncidentLog } from '../entity/incident.log.entity';
 import { v4 } from 'uuid';
 import { UserService } from 'src/user/service/user.service';
 import { ConfigService } from '@nestjs/config';
+import { buildTsQueryTerm, getTsVector } from 'src/common/utils/ts.vector.util';
+import dbQuery from 'src/common/constants/db.query';
 
 @Injectable()
 export class IncidentService {
@@ -50,6 +52,13 @@ export class IncidentService {
         const newIncident = await incidentRepo.create(incident);
         await incidentRepo.save(incident);
         await incidentLogRepo.save(incidentLog);
+        const tsQuery = await this.getIncidentVectorQuery(
+          incident.title,
+          incident.description,
+        );
+        if (tsQuery) {
+          await transactionalEntityManager.query(tsQuery, [incident.id]);
+        }
         return newIncident;
       },
     );
@@ -57,17 +66,56 @@ export class IncidentService {
   }
 
   async getIncidentByTenantId(
-    tenantId: string,
-    pagination: Pagination,
+    tenantId?: string,
+    pagination?: Pagination,
+    filter?: GetIncidentFilter,
   ): Promise<Incident[]> {
     const query = this.dataSource
       .getRepository(Incident)
-      .createQueryBuilder('incident')
-      .where('incident.tenantId = :tenantId', {
+      .createQueryBuilder('incident');
+    if (tenantId) {
+      query.where('incident.tenantId = :tenantId', {
         tenantId,
       });
-    if (pagination) {
+    }
+    if (filter?.searchTerm) {
+      const tsQueryTerm = buildTsQueryTerm(filter.searchTerm);
+      query.addSelect(
+        `ts_rank(search_term, to_tsquery('simple', :tsQueryTerm)) AS score`,
+      );
+      query.andWhere(
+        `incident.search_term @@ to_tsquery('simple', :tsQueryTerm)`,
+        {
+          tsQueryTerm: tsQueryTerm,
+        },
+      );
+      query.orderBy('score', 'DESC');
+    }
+    if (filter?.categoryId) {
+      query.andWhere('incident.categoryId = :categoryId', {
+        categoryId: filter.categoryId,
+      });
+    }
+    if (filter?.priority) {
+      query.andWhere('incident.priority = :priority', {
+        priority: filter.priority,
+      });
+    }
+    if (filter?.tenantId) {
+      query.andWhere('incident.tenantId = :tenantId', {
+        tenantId: filter.tenantId,
+      });
+    }
+
+    if (filter?.status) {
+      query.andWhere('incident.status = :status', {
+        status: filter.status,
+      });
+    }
+    if (pagination?.offset) {
       query.offset(pagination.offset);
+    }
+    if (pagination?.limit) {
       query.limit(pagination.limit);
     }
     query.orderBy('incident.createdAt', 'DESC');
@@ -89,11 +137,11 @@ export class IncidentService {
   async acknowledgeIncident(incidentId: string, acknowldgerId: string) {
     return this.dataSource.getRepository(Incident).update(incidentId, {
       acknowledgedById: acknowldgerId,
-      status: IncidentStatus.ADMIN_IN_PROGRESS,
+      status: IncidentStatus.IN_PROGRESS,
     });
   }
 
-  async resolverIncident(incidentId: string, tenantId: string) {
+  async resolveIncident(incidentId: string, tenantId: string) {
     const repo = this.dataSource.getRepository(Incident);
     const incident = await repo.findOneOrFail({ where: { id: incidentId } });
     if (
@@ -103,5 +151,23 @@ export class IncidentService {
       throw new ForbiddenException('Unauthorized to perform this operation');
     }
     return repo.update(incidentId, { status: IncidentStatus.RESOLVED });
+  }
+
+  async getIncidentVectorQuery(
+    title: string,
+    description: string,
+  ): Promise<string> {
+    const tsVector =
+      getTsVector(title, 'A', 'simple') +
+      ' || ' +
+      getTsVector(description, 'B', 'simple');
+    if (tsVector) {
+      const query = dbQuery.UPDATE_INCIDENT_SEARCH_TERM.replace(
+        '<TSVECTOR_TERM>',
+        tsVector,
+      );
+      return query;
+    }
+    return;
   }
 }

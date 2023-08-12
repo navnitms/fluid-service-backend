@@ -35,9 +35,7 @@ export enum Priority {
 
 export enum IncidentStatus {
     CREATED = "CREATED",
-    ESCALATED = "ESCALATED",
     IN_PROGRESS = "IN_PROGRESS",
-    ADMIN_IN_PROGRESS = "ADMIN_IN_PROGRESS",
     RESOLVED = "RESOLVED",
     REOPENED = "REOPENED",
     ASSIGNED = "ASSIGNED"
@@ -122,6 +120,14 @@ export interface CreateIncidentInput {
     categoryId: string;
 }
 
+export interface GetIncidentFilter {
+    searchTerm?: Nullable<string>;
+    categoryId?: Nullable<string>;
+    tenantId?: Nullable<string>;
+    status?: Nullable<IncidentStatus>;
+    priority?: Nullable<Priority>;
+}
+
 export interface AddressInput {
     value: string;
     pincode?: Nullable<number>;
@@ -173,8 +179,9 @@ export interface Token {
 }
 
 export interface Authentication {
-    user?: Nullable<User>;
-    token?: Nullable<Token>;
+    user: User;
+    token: Token;
+    permissions?: Nullable<Nullable<PermissionType>[]>;
 }
 
 export interface IMutation {
@@ -205,7 +212,7 @@ export interface Contract {
 export interface IQuery {
     getAllContracts(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<Contract>[]> | Promise<Nullable<Nullable<Contract>[]>>;
     getCommentsForIncident(incidentId: string, pagination?: Nullable<Pagination>): Nullable<Comment>[] | Promise<Nullable<Comment>[]>;
-    getAllIncidents(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<Incident>[]> | Promise<Nullable<Nullable<Incident>[]>>;
+    getAllIncidents(tenantId: string, pagination?: Nullable<Pagination>, filter?: Nullable<GetIncidentFilter>): Nullable<Nullable<Incident>[]> | Promise<Nullable<Nullable<Incident>[]>>;
     getIncidentById(incidentId: string, tenantId?: Nullable<string>): Incident | Promise<Incident>;
     getTenantDetails(id: string): Nullable<Tenant> | Promise<Nullable<Tenant>>;
     getAllTenants(input?: Nullable<TenantFilter>, pagination?: Nullable<Pagination>): Nullable<Nullable<Tenant>[]> | Promise<Nullable<Nullable<Tenant>[]>>;

@@ -15,6 +15,7 @@ import { configuration } from 'src/common/config/app.config';
 import {
   OperationType,
   Pagination,
+  PermissionType,
   UserInput,
   UserRoles,
 } from 'src/schema/graphql.schema';
@@ -58,6 +59,7 @@ export class UserService {
         id: v4(),
         password: hashPassword,
         role: roleEntity,
+        adminPassword: true,
       };
 
       const roleDetails = await this.roleService.getById(roleId);
@@ -271,5 +273,10 @@ export class UserService {
       await this.rolePermissionService.getRolePermissionFromEnum(userRole);
 
     return new Set(permissions);
+  }
+
+  async getUserPermissions(userId: string): Promise<PermissionType[]> {
+    const role = await this.getUserRoleByUserId(userId);
+    return this.rolePermissionService.getRolePermissionFromEnum(role);
   }
 }

@@ -54,4 +54,7 @@ export class User extends AbstractEntity {
   })
   @JoinColumn({ name: 'role_id', referencedColumnName: 'id' })
   public role?: Role;
+
+  @Column({ type: 'boolean', default: true })
+  public adminPassword!: boolean;
 }
