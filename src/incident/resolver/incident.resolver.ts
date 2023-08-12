@@ -6,17 +6,21 @@ import {
   ResolveField,
   Resolver,
   Query,
+  Context,
 } from '@nestjs/graphql';
 import { IncidentService } from '../service/incident.service';
 import {
   CreateIncidentInput,
+  GetIncidentFilter,
   Incident,
   Pagination,
+  PermissionType,
 } from 'src/schema/graphql.schema';
 import { Incident as IncidentEntity } from '../../incident/entity/incident.entity';
 import UserLoader from 'src/user/loader/user.loader';
 import { IncidentLogLoader } from '../loader/incident.log.loader';
 import { IncidentCommentLoader } from '../loader/incident.comment.loader';
+import { Permissions } from 'src/auth/decorator/permission.decorator';
 
 @Resolver('Incident')
 export class IncidentResolver {
@@ -42,14 +46,18 @@ export class IncidentResolver {
     );
   }
 
+  @Permissions(PermissionType.ViewAllIncidents)
   @Query()
   getAllIncidents(
+    @Context('user') user: any,
     @Args('tenantId') id: string,
     @Args('pagination') pagination: Pagination,
+    @Args('filter') filter: GetIncidentFilter,
   ): Promise<Incident[]> {
     return this.incidentService.getIncidentByTenantId(
-      '2fc6cb8f-0a91-4d51-864a-aac61b2bd25b',
+      user.tenantId,
       pagination,
+      filter,
     );
   }
 

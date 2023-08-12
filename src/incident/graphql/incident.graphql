@@ -7,9 +7,7 @@ enum Priority {
 
 enum IncidentStatus {
   CREATED
-  ESCALATED
   IN_PROGRESS
-  ADMIN_IN_PROGRESS
   RESOLVED
   REOPENED
   ASSIGNED
@@ -37,6 +35,14 @@ input CreateIncidentInput {
     categoryId: ID!
 }
 
+input GetIncidentFilter {
+  searchTerm: String
+  categoryId: ID
+  tenantId: ID
+  status: IncidentStatus
+  priority: Priority
+}
+
 type Incident {
     id: ID!
     title: String!
@@ -59,6 +65,6 @@ type Mutation {
 }
 
 type Query {
-  getAllIncidents(tenantId: ID!, pagination: Pagination): [Incident]
+  getAllIncidents(tenantId: ID!, pagination: Pagination, filter: GetIncidentFilter): [Incident]
   getIncidentById( incidentId: ID!, tenantId: ID): Incident!
 }

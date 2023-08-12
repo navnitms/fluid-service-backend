@@ -35,4 +35,7 @@ export class IncidentLog extends AbstractEntity {
 
   @Column()
   public operation!: IncidentOperation;
+
+  @Column({ length: 1024 })
+  public text: string;
 }

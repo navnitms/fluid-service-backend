@@ -11,9 +11,10 @@ import { IncidentCommentLoader } from './loader/incident.comment.loader';
 import { CommentService } from './service/comment.service';
 import { CommentResolver } from './resolver/comment.resolver';
 import { ConfigService } from '@nestjs/config';
+import { AuthenticationModule } from 'src/auth/authentication.module';
 
 @Module({
-  imports: [CommonModule, UserModule, TenantModule],
+  imports: [CommonModule, UserModule, TenantModule, AuthenticationModule],
   providers: [
     IncidentResolver,
     IncidentService,
