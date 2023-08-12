@@ -39,7 +39,8 @@ export enum IncidentStatus {
     IN_PROGRESS = "IN_PROGRESS",
     ADMIN_IN_PROGRESS = "ADMIN_IN_PROGRESS",
     RESOLVED = "RESOLVED",
-    REOPENED = "REOPENED"
+    REOPENED = "REOPENED",
+    ASSIGNED = "ASSIGNED"
 }
 
 export enum IncidentOperation {
@@ -59,6 +60,13 @@ export enum IncidentOperation {
 export enum Status {
     ACTIVE = "ACTIVE",
     INACTIVE = "INACTIVE"
+}
+
+export enum PermissionType {
+    ViewAllIncidents = "ViewAllIncidents",
+    AdminViewAllIncidents = "AdminViewAllIncidents",
+    ViewIncident = "ViewIncident",
+    AdminViewIncident = "AdminViewIncident"
 }
 
 export enum UserStatus {
@@ -177,6 +185,7 @@ export interface IMutation {
     createIncident(input: CreateIncidentInput): Nullable<Incident> | Promise<Nullable<Incident>>;
     createTenant(input: TenantInput): Nullable<Tenant> | Promise<Nullable<Tenant>>;
     createTenantNotes(input: TenantNotesInput): Nullable<TenantNotes> | Promise<Nullable<TenantNotes>>;
+    createRole(name: UserRoles): Role | Promise<Role>;
     createUser(input: UserInput): Nullable<User> | Promise<Nullable<User>>;
     deleteUser(id: string): Nullable<string> | Promise<Nullable<string>>;
 }

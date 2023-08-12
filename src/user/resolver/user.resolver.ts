@@ -7,7 +7,12 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { Pagination, User, UserInput } from 'src/schema/graphql.schema';
+import {
+  Pagination,
+  PermissionType,
+  User,
+  UserInput,
+} from 'src/schema/graphql.schema';
 import { User as UserEntity } from '../entity/user.entity';
 import { UserService } from '../service/user.service';
 import { Inject, ParseUUIDPipe } from '@nestjs/common';
@@ -32,7 +37,7 @@ export class UserResolver {
     return this.userService.deleteUser(userId);
   }
 
-  @Permissions('view-all-users')
+  @Permissions(PermissionType.AdminViewAllIncidents)
   @Query()
   getAllUsers(
     @Args('tenantId') id: string,

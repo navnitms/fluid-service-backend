@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, EntityManager } from 'typeorm';
 import RolePermission from '../entity/role.permission.entity';
+import Role from '../entity/role.entity';
+import { PermissionType, UserRoles } from 'src/schema/graphql.schema';
 
 @Injectable()
 export class RolePermissionService {
@@ -36,5 +38,17 @@ export class RolePermissionService {
 
   async deleteRolePermission(id: string): Promise<void> {
     this.dataSource.getRepository(RolePermission).delete({ roleId: id });
+  }
+
+  async getRolePermissionFromEnum(role: Role) {
+    switch (role.name) {
+      case UserRoles.OWNER: {
+        return [PermissionType.ViewAllIncidents];
+        break;
+      }
+      default: {
+        return [];
+      }
+    }
   }
 }

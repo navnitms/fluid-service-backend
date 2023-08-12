@@ -8,6 +8,7 @@ import UserLoader from './loader/user.loader';
 import { AuthenticationModule } from 'src/auth/authentication.module';
 import { PermissionService } from './service/permission.service';
 import { RolePermissionService } from './service/role.permission.service';
+import { RoleResolver } from './resolver/role.resolver';
 
 @Module({
   imports: [CommonModule, forwardRef(() => AuthenticationModule)],
@@ -15,6 +16,7 @@ import { RolePermissionService } from './service/role.permission.service';
     UserResolver,
     UserService,
     RoleService,
+    RoleResolver,
     UserRoleLoader,
     UserLoader,
     PermissionService,

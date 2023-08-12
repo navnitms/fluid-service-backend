@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, DeepPartial, EntityManager } from 'typeorm';
 import { Incident } from '../entity/incident.entity';
 import {
@@ -6,15 +6,23 @@ import {
   IncidentOperation,
   IncidentStatus,
   Pagination,
+  UserRoles,
 } from 'src/schema/graphql.schema';
 import { IncidentLog } from '../entity/incident.log.entity';
 import { v4 } from 'uuid';
+import { UserService } from 'src/user/service/user.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class IncidentService {
   private logger: Logger = new Logger(IncidentService.name);
 
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly configService: ConfigService,
+    @Inject(UserService)
+    private readonly userService: UserService,
+  ) {}
 
   async create(
     userId: string,
@@ -70,5 +78,30 @@ export class IncidentService {
     return this.dataSource
       .getRepository(Incident)
       .findOneOrFail({ where: { id, tenantId } });
+  }
+
+  async assignIncident(incidentId: string, assigneeId: string) {
+    return this.dataSource
+      .getRepository(Incident)
+      .update(incidentId, { assigneeId });
+  }
+
+  async acknowledgeIncident(incidentId: string, acknowldgerId: string) {
+    return this.dataSource.getRepository(Incident).update(incidentId, {
+      acknowledgedById: acknowldgerId,
+      status: IncidentStatus.ADMIN_IN_PROGRESS,
+    });
+  }
+
+  async resolverIncident(incidentId: string, tenantId: string) {
+    const repo = this.dataSource.getRepository(Incident);
+    const incident = await repo.findOneOrFail({ where: { id: incidentId } });
+    if (
+      incident.tenantId != tenantId ||
+      incident.tenantId != this.configService.get('DEFAULT_TENANT')
+    ) {
+      throw new ForbiddenException('Unauthorized to perform this operation');
+    }
+    return repo.update(incidentId, { status: IncidentStatus.RESOLVED });
   }
 }
