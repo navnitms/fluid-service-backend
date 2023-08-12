@@ -10,6 +10,7 @@ import { IncidentLogResolver } from './resolver/incident.log.resolver';
 import { IncidentCommentLoader } from './loader/incident.comment.loader';
 import { CommentService } from './service/comment.service';
 import { CommentResolver } from './resolver/comment.resolver';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [CommonModule, UserModule, TenantModule],
@@ -22,6 +23,7 @@ import { CommentResolver } from './resolver/comment.resolver';
     IncidentCommentLoader,
     CommentService,
     CommentResolver,
+    ConfigService,
   ],
   exports: [],
 })

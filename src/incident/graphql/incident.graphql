@@ -12,6 +12,7 @@ enum IncidentStatus {
   ADMIN_IN_PROGRESS
   RESOLVED
   REOPENED
+  ASSIGNED
 }
 
 enum IncidentOperation {

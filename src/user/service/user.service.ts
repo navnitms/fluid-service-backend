@@ -205,20 +205,22 @@ export class UserService {
     operation: OperationType = OperationType.AND,
     allPermissionsOfUser?: Set<string>,
   ): Promise<boolean> {
-    const permissionsRequired = (
-      await Promise.all(
-        permissionToVerify.map((p) =>
-          this.permissionService.getPermissionByName(p),
-        ),
-      )
-    ).flat(1);
+    // const permissionsRequired = (
+    //   await Promise.all(
+    //     permissionToVerify.map((p) =>
+    //       this.permissionService.getPermissionByName(p),
+    //     ),
+    //   )
+    // ).flat(1);
 
-    if (permissionsRequired.length !== permissionToVerify.length) {
-      const validPermissions = new Set(permissionsRequired.map((p) => p.name));
-      throw new PermissionNotFoundException(
-        permissionToVerify.filter((p) => !validPermissions.has(p)).toString(),
-      );
-    }
+    // if (permissionsRequired.length !== permissionToVerify.length) {
+    //   const validPermissions = new Set(permissionsRequired.map((p) => p.name));
+    //   throw new PermissionNotFoundException(
+    //     permissionToVerify.filter((p) => !validPermissions.has(p)).toString(),
+    //   );
+    // }
+    // ToDo Change after implementing cache
+    const permissionsRequired = permissionToVerify;
     allPermissionsOfUser = allPermissionsOfUser
       ? allPermissionsOfUser
       : await this.getAllUserpermissionIds(id);
@@ -226,7 +228,7 @@ export class UserService {
       allPermissionsOfUser = new Set();
     }
     const requiredPermissionsWithUser = permissionsRequired
-      .map((x) => x.id)
+      .map((x) => x)
       .filter((x) => (allPermissionsOfUser as Set<string>).has(x));
     switch (operation) {
       case OperationType.AND:
@@ -241,7 +243,7 @@ export class UserService {
     }
   }
 
-  private async getUserRoleByUserId(userId: string): Promise<Role> {
+  async getUserRoleByUserId(userId: string): Promise<Role> {
     const user = await this.dataSource
       .getRepository(User)
       .findOne({ where: { id: userId }, relations: ['role'] });
@@ -249,11 +251,18 @@ export class UserService {
   }
 
   private async getAllUserpermissionIds(id: string): Promise<Set<string>> {
-    const userGroup = await this.getUserRoleByUserId(id);
-    const groupPermissions: RolePermission[] = (
-      await this.rolePermissionService.getPermissionByRoleId(userGroup.id)
-    ).flat(1);
-    const permissionIds = groupPermissions.map((x) => x.permissionId);
-    return new Set(permissionIds);
+    const userRole = await this.getUserRoleByUserId(id);
+    // To Do Use After implementing Cache
+
+    // const groupPermissions: RolePermission[] = (
+    //   await this.rolePermissionService.getPermissionByRoleId(userRole.id)
+    // ).flat(1);
+    // const permissionIds = groupPermissions.map((x) => x.permissionId);
+    // return new Set(permissionIds);
+
+    const permissions =
+      await this.rolePermissionService.getRolePermissionFromEnum(userRole);
+
+    return new Set(permissions);
   }
 }
