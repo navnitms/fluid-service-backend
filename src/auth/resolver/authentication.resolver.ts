@@ -1,4 +1,10 @@
-import { Args, Mutation, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { AuthenticationService } from '../service/authentication.service';
 import { Inject } from '@nestjs/common';
 import { Authentication, LoginInput } from 'src/schema/graphql.schema';
