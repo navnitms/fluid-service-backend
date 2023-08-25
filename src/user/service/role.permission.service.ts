@@ -43,11 +43,11 @@ export class RolePermissionService {
   async getRolePermissionFromEnum(role: Role) {
     switch (role.name) {
       case UserRoles.OWNER: {
-        return [PermissionType.ViewAllIncidents];
+        return [PermissionType.ViewAllIncidents, PermissionType.ViewIncident];
         break;
       }
       default: {
-        return [];
+        return [PermissionType.ViewAllIncidents];
       }
     }
   }
