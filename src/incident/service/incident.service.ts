@@ -141,7 +141,7 @@ export class IncidentService {
     });
   }
 
-  async resolveIncident(incidentId: string, tenantId: string) {
+  async resolveIncident(incidentId: string, userId: string, tenantId: string) {
     const repo = this.dataSource.getRepository(Incident);
     const incident = await repo.findOneOrFail({ where: { id: incidentId } });
     if (

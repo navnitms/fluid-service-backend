@@ -21,6 +21,7 @@ import UserLoader from 'src/user/loader/user.loader';
 import { IncidentLogLoader } from '../loader/incident.log.loader';
 import { IncidentCommentLoader } from '../loader/incident.comment.loader';
 import { Permissions } from 'src/auth/decorator/permission.decorator';
+import { configuration } from 'src/common/config/app.config';
 
 @Resolver('Incident')
 export class IncidentResolver {
@@ -35,41 +36,46 @@ export class IncidentResolver {
     private readonly incidentCommentLoader: IncidentCommentLoader,
   ) {}
 
+  @Permissions(PermissionType.ViewAllIncidents)
   @Mutation()
   createIncident(
+    @Context('user') user: any,
     @Args('input') incidentInput: CreateIncidentInput,
   ): Promise<Incident> {
-    return this.incidentService.create(
-      '992a74e5-a01d-4a5a-8ba7-007bd12ebb04',
-      '2fc6cb8f-0a91-4d51-864a-aac61b2bd25b',
-      incidentInput,
-    );
+    return this.incidentService.create(user.id, user.tenantId, incidentInput);
   }
 
   @Permissions(PermissionType.ViewAllIncidents)
   @Query()
   getAllIncidents(
     @Context('user') user: any,
-    @Args('tenantId') id: string,
+    @Args('tenantId') tenantId: string,
     @Args('pagination') pagination: Pagination,
     @Args('filter') filter: GetIncidentFilter,
   ): Promise<Incident[]> {
+    const filteredtenantId =
+      user.tenantId === configuration.defaultTenantId
+        ? tenantId
+        : user.tenantId;
     return this.incidentService.getIncidentByTenantId(
-      user.tenantId,
+      filteredtenantId,
       pagination,
       filter,
     );
   }
 
+  @Permissions(PermissionType.ViewAllIncidents)
   @Query()
   getIncidentById(
+    @Context('user') user: any,
     @Args('tenantId') tenantId: string,
     @Args('incidentId') incidentId: string,
   ): Promise<Incident> {
-    return this.incidentService.getIncidentById(
-      incidentId,
-      '2fc6cb8f-0a91-4d51-864a-aac61b2bd25b',
-    );
+    const filteredtenantId =
+      user.tenantId === configuration.defaultTenantId
+        ? tenantId
+        : user.tenantId;
+    return this.incidentService.getIncidentById(incidentId, filteredtenantId);
   }
 
   @ResolveField()
