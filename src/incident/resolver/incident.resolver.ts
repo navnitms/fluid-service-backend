@@ -23,6 +23,7 @@ import { IncidentCommentLoader } from '../loader/incident.comment.loader';
 import { Permissions } from 'src/auth/decorator/permission.decorator';
 import { configuration } from 'src/common/config/app.config';
 import CategoryLoader from '../loader/category.loader';
+import TenantLoader from 'src/tenant/loader/tenant.loader';
 
 @Resolver('Incident')
 export class IncidentResolver {
@@ -37,6 +38,8 @@ export class IncidentResolver {
     private readonly incidentCommentLoader: IncidentCommentLoader,
     @Inject(CategoryLoader)
     private readonly categoryLoader: CategoryLoader,
+    @Inject(TenantLoader)
+    private readonly tenantLoader: TenantLoader,
   ) {}
 
   @Permissions(PermissionType.ViewAllIncidents)
@@ -115,6 +118,13 @@ export class IncidentResolver {
   async category(@Parent() incident: IncidentEntity) {
     if (incident.categoryId) {
       return this.categoryLoader.getCategoryLoader().load(incident.categoryId);
+    }
+  }
+
+  @ResolveField()
+  async tenant(@Parent() incident: IncidentEntity) {
+    if (incident.tenantId) {
+      return this.tenantLoader.getTenantsLoader().load(incident.tenantId);
     }
   }
 }
