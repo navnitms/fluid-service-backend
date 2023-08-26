@@ -12,6 +12,8 @@ import { CommentService } from './service/comment.service';
 import { CommentResolver } from './resolver/comment.resolver';
 import { ConfigService } from '@nestjs/config';
 import { AuthenticationModule } from 'src/auth/authentication.module';
+import CategoryLoader from './loader/category.loader';
+import { CategoryService } from './service/category.service';
 
 @Module({
   imports: [CommonModule, UserModule, TenantModule, AuthenticationModule],
@@ -25,6 +27,8 @@ import { AuthenticationModule } from 'src/auth/authentication.module';
     CommentService,
     CommentResolver,
     ConfigService,
+    CategoryLoader,
+    CategoryService,
   ],
   exports: [],
 })
