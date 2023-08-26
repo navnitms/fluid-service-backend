@@ -36,7 +36,7 @@ export class User extends AbstractEntity {
   })
   public email!: string;
 
-  @Column({ default: UserStatus.INVITED })
+  @Column({ default: UserStatus.ACTIVE })
   public status!: UserStatus;
 
   @Column()

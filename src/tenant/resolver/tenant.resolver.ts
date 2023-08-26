@@ -11,6 +11,8 @@ import {
   Tenant,
   TenantFilter,
   TenantInput,
+  TenantSummary,
+  UpdateTenantInput,
 } from 'src/schema/graphql.schema';
 import { TenantService } from '../service/tenant.service';
 import { Inject, ParseUUIDPipe } from '@nestjs/common';
@@ -36,9 +38,22 @@ export class TenantsResolver {
     return this.tenantsService.create(tenantInput);
   }
 
+  @Mutation()
+  updateTenant(
+    @Args('tenantId') tenantId: string,
+    @Args('input') tenantInput: UpdateTenantInput,
+  ): Promise<Tenant> {
+    return this.tenantsService.updateTenantDetails(tenantId, tenantInput);
+  }
+
   @Query()
   getTenantDetails(@Args('id', ParseUUIDPipe) id: string): Promise<Tenant> {
     return this.tenantsService.getTenantById(id);
+  }
+
+  @Query()
+  getTenantSummary(): Promise<TenantSummary> {
+    return this.tenantsService.getTenantSummary();
   }
 
   @Query()

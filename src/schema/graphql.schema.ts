@@ -134,6 +134,12 @@ export interface AddressInput {
     districtId: string;
 }
 
+export interface UpdateAddressInput {
+    value?: Nullable<string>;
+    pincode?: Nullable<number>;
+    districtId?: Nullable<string>;
+}
+
 export interface DistrictInput {
     id?: Nullable<string>;
 }
@@ -147,7 +153,24 @@ export interface TenantInput {
     categoryId: string;
     replyToEmail: string;
     autoEscalation?: Nullable<boolean>;
+    phone?: Nullable<string>;
     address: AddressInput;
+}
+
+export interface UpdateTenantInput {
+    name?: Nullable<string>;
+    categoryId?: Nullable<string>;
+    replyToEmail?: Nullable<string>;
+    autoEscalation?: Nullable<boolean>;
+    phone?: Nullable<string>;
+    status?: Nullable<Status>;
+    address?: Nullable<UpdateAddressInput>;
+}
+
+export interface UpdateTenantSettingsInput {
+    replyToEmail?: Nullable<string>;
+    phone?: Nullable<string>;
+    autoEscalation?: Nullable<boolean>;
 }
 
 export interface TenantFilter {
@@ -190,7 +213,8 @@ export interface IMutation {
     createProduct(input: CreateProductInput): Nullable<Product> | Promise<Nullable<Product>>;
     createComment(input: CreateCommentInput): Comment | Promise<Comment>;
     createIncident(input: CreateIncidentInput): Nullable<Incident> | Promise<Nullable<Incident>>;
-    createTenant(input: TenantInput): Nullable<Tenant> | Promise<Nullable<Tenant>>;
+    createTenant(input: TenantInput): Tenant | Promise<Tenant>;
+    updateTenant(tenantId: string, input: UpdateTenantInput): Tenant | Promise<Tenant>;
     createTenantNotes(input: TenantNotesInput): Nullable<TenantNotes> | Promise<Nullable<TenantNotes>>;
     createRole(name: UserRoles): Role | Promise<Role>;
     createUser(input: UserInput): Nullable<User> | Promise<Nullable<User>>;
@@ -216,6 +240,7 @@ export interface IQuery {
     getIncidentById(incidentId: string, tenantId?: Nullable<string>): Incident | Promise<Incident>;
     getTenantDetails(id: string): Nullable<Tenant> | Promise<Nullable<Tenant>>;
     getAllTenants(input?: Nullable<TenantFilter>, pagination?: Nullable<Pagination>): Nullable<Nullable<Tenant>[]> | Promise<Nullable<Nullable<Tenant>[]>>;
+    getTenantSummary(): TenantSummary | Promise<TenantSummary>;
     getTenantNotes(id: string): Nullable<Nullable<TenantNotes>[]> | Promise<Nullable<Nullable<TenantNotes>[]>>;
     getAllRoles(): Nullable<Role>[] | Promise<Nullable<Role>[]>;
     getAllUsers(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
@@ -311,9 +336,10 @@ export interface Tenant {
     notes?: Nullable<Nullable<TenantNotes>[]>;
 }
 
-export interface Test {
-    current: string;
-    previous: string;
+export interface TenantSummary {
+    TOTAL_COUNT?: Nullable<number>;
+    ACTIVE?: Nullable<number>;
+    INACTIVE?: Nullable<number>;
 }
 
 export interface TenantNotes {

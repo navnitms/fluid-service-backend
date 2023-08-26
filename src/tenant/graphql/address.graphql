@@ -24,6 +24,12 @@ input AddressInput {
   districtId: ID!
 }
 
+input UpdateAddressInput {
+  value: String
+  pincode: Int
+  districtId: ID
+}
+
 input DistrictInput {
   id: String
 }

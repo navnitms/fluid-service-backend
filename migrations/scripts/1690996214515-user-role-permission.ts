@@ -17,7 +17,7 @@ export class UserRolePermission1690996214515 implements MigrationInterface {
       `CREATE UNIQUE INDEX "idx_role_name" ON "role" ("name") WHERE "deleted_at" IS NULL`,
     );
     await queryRunner.query(
-      `CREATE TABLE "user" ("created_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "updated_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP(0), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying, "tenant_id" uuid NOT NULL, "email" character varying NOT NULL, "status" character varying NOT NULL DEFAULT 'INVITED', "password" character varying NOT NULL, "refresh_token" character varying, "invite_token" character varying, "role_id" uuid, CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "user" ("created_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "updated_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP(0), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying, "tenant_id" uuid NOT NULL, "email" character varying NOT NULL, "status" character varying NOT NULL DEFAULT 'ACTIVE', "password" character varying NOT NULL, "refresh_token" character varying, "invite_token" character varying, "role_id" uuid, CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE UNIQUE INDEX "idx_user_email" ON "user" ("email") WHERE "deleted_at" IS NULL`,
