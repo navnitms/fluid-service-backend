@@ -26,7 +26,7 @@ export default class TenantLoader {
     } = {};
     tenants.forEach((tenant) => (tenantIdToTenantMap[tenant.id] = tenant));
 
-    const response = tenantIds.map((tenantId) => tenants[tenantId]);
+    const response = tenantIds.map((tenantId) => tenantIdToTenantMap[tenantId]);
     return response;
   };
 
