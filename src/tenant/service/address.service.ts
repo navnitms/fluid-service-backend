@@ -9,7 +9,7 @@ import {
 import { Address } from '../entity/address.entity';
 import { District } from '../entity/district.entity';
 import { State } from '../entity/state.entity';
-import { AddressInput } from 'src/schema/graphql.schema';
+import { AddressInput, UpdateAddressInput } from 'src/schema/graphql.schema';
 
 @Injectable()
 export class AddressService {
@@ -38,7 +38,7 @@ export class AddressService {
 
   async updateAddress(
     addressId: string,
-    addressInput: AddressInput,
+    addressInput: UpdateAddressInput,
     entityManager?: EntityManager,
   ): Promise<Address> {
     const districtEntity = await this.getDistrictById(addressInput.districtId, [

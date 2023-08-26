@@ -11,6 +11,7 @@ import { Address } from './address.entity';
 import { AbstractEntity } from '../../common/models/AbstractEntity';
 import { TenantCategory } from './tenant.category.entity';
 import { TenantSettings } from './tenant.settings.entity';
+import { TenantStatus } from '../enum/tenant.status.enum';
 
 @Entity()
 export class Tenant extends AbstractEntity {
@@ -23,6 +24,9 @@ export class Tenant extends AbstractEntity {
     where: `"deleted_at" IS NULL`,
   })
   public name!: string;
+
+  @Column({ default: TenantStatus.ACTIVE })
+  public status!: TenantStatus;
 
   @Column({ nullable: true })
   public addressId?: string;

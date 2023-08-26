@@ -23,17 +23,35 @@ type Tenant {
   notes: [TenantNotes]
 }
 
-type Test {
-    current: String!
-    previous: String!
+type TenantSummary {
+    TOTAL_COUNT: Int
+    ACTIVE: Int
+	INACTIVE: Int
 }
 
 input TenantInput {
   name: String!
   categoryId: ID!
-	replyToEmail: String!
+  replyToEmail: String!
+  autoEscalation: Boolean
+  phone: String
+  address: AddressInput!
+}
+
+input UpdateTenantInput {
+  name: String
+  categoryId: ID
+  replyToEmail: String
+  autoEscalation: Boolean
+  phone: String
+  status: Status
+  address: UpdateAddressInput
+}
+
+input UpdateTenantSettingsInput {
+	replyToEmail: String
+	phone: String
 	autoEscalation: Boolean
-	address: AddressInput!
 }
 
 input TenantFilter {
@@ -42,10 +60,13 @@ input TenantFilter {
 }
 
 type Mutation {
-	createTenant(input: TenantInput!): Tenant
+	createTenant(input: TenantInput!): Tenant!
+	updateTenant(tenantId: ID!, input: UpdateTenantInput!): Tenant!
+
 }
 
 type Query {
 	getTenantDetails(id: ID!): Tenant
 	getAllTenants(input: TenantFilter, pagination: Pagination): [Tenant]
+	getTenantSummary: TenantSummary!
 }

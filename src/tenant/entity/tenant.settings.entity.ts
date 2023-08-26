@@ -15,6 +15,9 @@ export class TenantSettings extends AbstractEntity {
   @Column()
   public replyToEmail!: string;
 
+  @Column({ nullable: true })
+  public phone?: string;
+
   @Column({ default: true })
   autoEscalation!: boolean;
 }
