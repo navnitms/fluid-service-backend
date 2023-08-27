@@ -23,13 +23,13 @@ export class Tenant1690637603384 implements MigrationInterface {
       `CREATE UNIQUE INDEX "idx_tenant_category_name" ON "tenant_category" ("name") WHERE "deleted_at" IS NULL`,
     );
     await queryRunner.query(
-      `CREATE TABLE "tenant_settings" ("created_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "updated_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP(0), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "tenant_id" character varying NOT NULL, "reply_to_email" character varying NOT NULL, "auto_escalation" boolean NOT NULL DEFAULT true, CONSTRAINT "PK_69225c0ca64bcbbf9af8a217043" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "tenant_settings" ("created_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "updated_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP(0), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "tenant_id" character varying NOT NULL, "reply_to_email" character varying NOT NULL, "auto_escalation" boolean NOT NULL DEFAULT true, "phone" character varying, "short_code" character varying NOT NULL, CONSTRAINT "PK_69225c0ca64bcbbf9af8a217043" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE INDEX "idx_tenant_settings_tenant_id" ON "tenant_settings" ("tenant_id") WHERE "deleted_at" IS NULL`,
     );
     await queryRunner.query(
-      `CREATE TABLE "tenant" ("created_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "updated_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP(0), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying NOT NULL, "address_id" uuid, "category_id" uuid NOT NULL, "tenant_setting_id" uuid NOT NULL, CONSTRAINT "REL_e1570d6f99d30f7b77e2e4a543" UNIQUE ("tenant_setting_id"), CONSTRAINT "PK_da8c6efd67bb301e810e56ac139" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "tenant" ("created_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "updated_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP(0), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying NOT NULL, "address_id" uuid, "category_id" uuid NOT NULL, "tenant_setting_id" uuid NOT NULL,"status" character varying NOT NULL DEFAULT 'ACTIVE', CONSTRAINT "REL_e1570d6f99d30f7b77e2e4a543" UNIQUE ("tenant_setting_id"), CONSTRAINT "PK_da8c6efd67bb301e810e56ac139" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE UNIQUE INDEX "idx_tenant_name" ON "tenant" ("name") WHERE "deleted_at" IS NULL`,

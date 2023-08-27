@@ -32,7 +32,7 @@ export class TenantService {
   ) {}
 
   async create(tenantInput: TenantInput): Promise<Tenant> {
-    const { name, replyToEmail, categoryId, phone } = tenantInput;
+    const { name, replyToEmail, categoryId, phone, shortCode } = tenantInput;
     const tenant: DeepPartial<Tenant> = {
       id: v4(),
       name,
@@ -43,6 +43,7 @@ export class TenantService {
       phone,
       tenantId: tenant.id,
       replyToEmail,
+      shortCode: shortCode.toUpperCase(),
     };
 
     const savedTenant = await this.dataSource.transaction(

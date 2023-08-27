@@ -36,6 +36,7 @@ input TenantInput {
   autoEscalation: Boolean
   phone: String
   address: AddressInput!
+  shortCode: String!
 }
 
 input UpdateTenantInput {

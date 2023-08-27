@@ -19,7 +19,7 @@ export class IncidentCategoryCommentLog1691002785283
       `CREATE INDEX "idx_incident_activity_log_user_id_date" ON "incident_log" ("incident_id") WHERE "deleted_at" IS NULL`,
     );
     await queryRunner.query(
-      `CREATE TABLE "incident" ("created_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "updated_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP(0), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "title" character varying(1024) NOT NULL, "description" character varying(100000) NOT NULL, "status" character varying NOT NULL, "category_id" uuid NOT NULL, "tenant_id" uuid NOT NULL, "created_by_id" uuid NOT NULL, "assignee_id" uuid, "acknowledged_by_id" uuid, "escalated_by_id" uuid, CONSTRAINT "PK_5f90b28b0b8238d89ee8edcf96e" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "incident" ("created_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "updated_at" TIMESTAMP(0) NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP(0), "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "title" character varying(1024) NOT NULL, "description" character varying(100000) NOT NULL, "status" character varying NOT NULL, "short_id" character varying NOT NULL, "priority" character varying NOT NULL, "category_id" uuid NOT NULL, "tenant_id" uuid NOT NULL, "created_by_id" uuid NOT NULL, "assignee_id" uuid, "acknowledged_by_id" uuid, "escalated_by_id" uuid, CONSTRAINT "PK_5f90b28b0b8238d89ee8edcf96e" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE INDEX "idx_incident_tenant_id_status" ON "incident" ("tenant_id", "status") WHERE "deleted_at" IS NULL`,

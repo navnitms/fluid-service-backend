@@ -14,6 +14,7 @@ import { UserService } from 'src/user/service/user.service';
 import { ConfigService } from '@nestjs/config';
 import { buildTsQueryTerm, getTsVector } from 'src/common/utils/ts.vector.util';
 import dbQuery from 'src/common/constants/db.query';
+import { TenantSettingService } from 'src/tenant/service/tenant.setting.service';
 
 @Injectable()
 export class IncidentService {
@@ -22,8 +23,8 @@ export class IncidentService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly configService: ConfigService,
-    @Inject(UserService)
-    private readonly userService: UserService,
+    @Inject(TenantSettingService)
+    private readonly tenantSettingService: TenantSettingService,
   ) {}
 
   async create(
@@ -31,11 +32,13 @@ export class IncidentService {
     tenantId: string,
     incidentInput: CreateIncidentInput,
   ) {
+    const shortId = await this.getShortIncidentId(tenantId);
     const incident: DeepPartial<Incident> = {
       id: v4(),
       tenantId,
       status: IncidentStatus.CREATED,
       createdById: userId,
+      shortId,
       ...incidentInput,
     };
     const incidentLog: DeepPartial<IncidentLog> = {
@@ -169,5 +172,20 @@ export class IncidentService {
       return query;
     }
     return;
+  }
+
+  private async getShortIncidentId(tenantId: string): Promise<string> {
+    const tenantSettings =
+      await this.tenantSettingService.getTenantSettingsByTenantId(tenantId);
+
+    const lastIncident = await this.dataSource
+      .getRepository(Incident)
+      .findOne({ where: { tenantId }, order: { createdAt: 'DESC' } });
+
+    const nextNumber = lastIncident
+      ? parseInt(lastIncident.shortId.split('-')[1]) + 1
+      : 1;
+
+    return `${tenantSettings.shortCode}-${nextNumber}`;
   }
 }
