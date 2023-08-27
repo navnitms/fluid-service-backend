@@ -29,6 +29,10 @@ export class Incident extends AbstractEntity {
   @Column({ length: 100000, nullable: false })
   public description: string;
 
+  @Column({ nullable: false })
+  public shortId!: string;
+
+  @Column({ nullable: false })
   public priority!: Priority;
 
   @Column({ nullable: false })

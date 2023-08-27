@@ -116,7 +116,7 @@ export interface CreateCommentInput {
 export interface CreateIncidentInput {
     title: string;
     description: string;
-    priority?: Nullable<Priority>;
+    priority: Priority;
     categoryId: string;
 }
 
@@ -155,6 +155,7 @@ export interface TenantInput {
     autoEscalation?: Nullable<boolean>;
     phone?: Nullable<string>;
     address: AddressInput;
+    shortCode: string;
 }
 
 export interface UpdateTenantInput {
@@ -275,6 +276,7 @@ export interface Comment {
 
 export interface Incident {
     id: string;
+    shortId: string;
     title: string;
     description: string;
     priority: Priority;

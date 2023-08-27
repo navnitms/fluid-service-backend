@@ -23,6 +23,6 @@ import TenantLoader from './loader/tenant.loader';
     TenantNotesService,
     TenantLoader,
   ],
-  exports: [TenantLoader],
+  exports: [TenantLoader, TenantSettingService],
 })
 export class TenantModule {}
