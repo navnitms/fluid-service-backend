@@ -8,7 +8,7 @@ export class UpdateEntities1691866964301 implements MigrationInterface {
       `ALTER TABLE "user" ADD "admin_password" boolean NOT NULL DEFAULT true`,
     );
     await queryRunner.query(
-      `ALTER TABLE "incident_log" ADD "text" character varying(1024)`,
+      `ALTER TABLE "incident_log" ADD "text" character varying(1024) NOT NULL`,
     );
     await queryRunner.query(
       `ALTER TABLE "incident" ADD "search_term" tsvector`,

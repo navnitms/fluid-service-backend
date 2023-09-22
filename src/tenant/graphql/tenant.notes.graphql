@@ -11,6 +11,7 @@ type TenantNotes {
 
 type Mutation {
 	createTenantNotes(input: TenantNotesInput!): TenantNotes
+	deleteTenantNotes(tenantNotesId: String!): String!
 }
 
 type Query {

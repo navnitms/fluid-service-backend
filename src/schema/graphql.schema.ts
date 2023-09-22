@@ -101,7 +101,20 @@ export interface CreateContractInput {
     endDate: DateTime;
     remark?: Nullable<string>;
     amount?: Nullable<number>;
-    contractProductIds?: Nullable<Nullable<string>[]>;
+    paymentDate: DateTime;
+    contractProducts?: Nullable<Nullable<ContractProductInput>[]>;
+}
+
+export interface ContractNotesInput {
+    contractId: string;
+    remark: string;
+}
+
+export interface ContractProductInput {
+    productId: string;
+    remark?: Nullable<string>;
+    count?: Nullable<number>;
+    productAmount?: Nullable<number>;
 }
 
 export interface CreateProductInput {
@@ -211,12 +224,15 @@ export interface Authentication {
 export interface IMutation {
     login(input: LoginInput): Nullable<Authentication> | Promise<Nullable<Authentication>>;
     createContract(input: CreateContractInput): Nullable<Contract> | Promise<Nullable<Contract>>;
+    createContractNotes(input: ContractNotesInput): ContractNotes | Promise<ContractNotes>;
+    deleteContractNotes(contractNotesId: string): string | Promise<string>;
     createProduct(input: CreateProductInput): Nullable<Product> | Promise<Nullable<Product>>;
     createComment(input: CreateCommentInput): Comment | Promise<Comment>;
     createIncident(input: CreateIncidentInput): Nullable<Incident> | Promise<Nullable<Incident>>;
     createTenant(input: TenantInput): Tenant | Promise<Tenant>;
     updateTenant(tenantId: string, input: UpdateTenantInput): Tenant | Promise<Tenant>;
     createTenantNotes(input: TenantNotesInput): Nullable<TenantNotes> | Promise<Nullable<TenantNotes>>;
+    deleteTenantNotes(tenantNotesId: string): string | Promise<string>;
     createRole(name: UserRoles): Role | Promise<Role>;
     createUser(input: UserInput): Nullable<User> | Promise<Nullable<User>>;
     deleteUser(id: string): Nullable<string> | Promise<Nullable<string>>;
@@ -236,6 +252,7 @@ export interface Contract {
 
 export interface IQuery {
     getAllContracts(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<Contract>[]> | Promise<Nullable<Nullable<Contract>[]>>;
+    getContractNotes(id: string): Nullable<Nullable<ContractNotes>[]> | Promise<Nullable<Nullable<ContractNotes>[]>>;
     getCommentsForIncident(incidentId: string, pagination?: Nullable<Pagination>): Nullable<Comment>[] | Promise<Nullable<Comment>[]>;
     getAllIncidents(tenantId: string, pagination?: Nullable<Pagination>, filter?: Nullable<GetIncidentFilter>): Nullable<Nullable<Incident>[]> | Promise<Nullable<Nullable<Incident>[]>>;
     getIncidentById(incidentId: string, tenantId?: Nullable<string>): Incident | Promise<Incident>;
@@ -246,6 +263,12 @@ export interface IQuery {
     getAllRoles(): Nullable<Role>[] | Promise<Nullable<Role>[]>;
     getAllUsers(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
     getUserById(id: string): User | Promise<User>;
+}
+
+export interface ContractNotes {
+    id: string;
+    remark: string;
+    createdAt?: Nullable<DateTime>;
 }
 
 export interface ContractProduct {

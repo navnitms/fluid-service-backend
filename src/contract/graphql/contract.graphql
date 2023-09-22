@@ -12,7 +12,8 @@ input CreateContractInput {
   endDate: DateTime!
   remark: String
   amount: Int
-  contractProductIds: [String]
+  paymentDate: DateTime!
+  contractProducts: [ContractProductInput]
 }
 
 type Contract {

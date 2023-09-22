@@ -5,3 +5,10 @@ type ContractProduct {
     count: Int
     productAmount: Int
 }
+
+input ContractProductInput {
+    productId: String!
+    remark: String
+    count: Int
+    productAmount: Int
+}

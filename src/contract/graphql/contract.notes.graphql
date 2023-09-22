@@ -1,0 +1,19 @@
+input ContractNotesInput {
+	contractId: ID!
+	remark: String!
+}
+
+type ContractNotes {
+	id: ID!
+	remark: String!
+    createdAt: DateTime
+}
+
+type Mutation {
+	createContractNotes(input: ContractNotesInput!): ContractNotes!
+	deleteContractNotes(contractNotesId: String!): String!
+}
+
+type Query {
+	getContractNotes(id: ID!): [ContractNotes]
+}
