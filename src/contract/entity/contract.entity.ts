@@ -21,6 +21,9 @@ export class Contract extends AbstractEntity {
   public id!: string;
 
   @Column({ nullable: false })
+  public shortId!: string;
+
+  @Column({ nullable: false })
   public tenantId!: string;
 
   @ManyToOne(() => Tenant, { nullable: false })

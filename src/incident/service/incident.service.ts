@@ -10,7 +10,6 @@ import {
 } from 'src/schema/graphql.schema';
 import { IncidentLog } from '../entity/incident.log.entity';
 import { v4 } from 'uuid';
-import { UserService } from 'src/user/service/user.service';
 import { ConfigService } from '@nestjs/config';
 import { buildTsQueryTerm, getTsVector } from 'src/common/utils/ts.vector.util';
 import dbQuery from 'src/common/constants/db.query';

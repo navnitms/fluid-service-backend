@@ -6,9 +6,10 @@ import { ProductService } from './service/product.service';
 import { ProductResolver } from './resolver/product.resolver';
 import { ContractProductService } from './service/contract.product.service';
 import { ContractProductLoader } from './loader/contract.product.loader';
+import { TenantModule } from 'src/tenant/tenant.module';
 
 @Module({
-  imports: [CommonModule],
+  imports: [CommonModule, TenantModule],
   providers: [
     ContractService,
     ContractResolver,
