@@ -254,7 +254,7 @@ export interface IQuery {
     getAllContracts(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<Contract>[]> | Promise<Nullable<Nullable<Contract>[]>>;
     getContractNotes(id: string): Nullable<Nullable<ContractNotes>[]> | Promise<Nullable<Nullable<ContractNotes>[]>>;
     getCommentsForIncident(incidentId: string, pagination?: Nullable<Pagination>): Nullable<Comment>[] | Promise<Nullable<Comment>[]>;
-    getAllIncidents(tenantId: string, pagination?: Nullable<Pagination>, filter?: Nullable<GetIncidentFilter>): Nullable<Nullable<Incident>[]> | Promise<Nullable<Nullable<Incident>[]>>;
+    getAllIncidents(pagination?: Nullable<Pagination>, filter?: Nullable<GetIncidentFilter>): Nullable<Nullable<Incident>[]> | Promise<Nullable<Nullable<Incident>[]>>;
     getIncidentById(incidentId: string, tenantId?: Nullable<string>): Incident | Promise<Incident>;
     getTenantDetails(id: string): Nullable<Tenant> | Promise<Nullable<Tenant>>;
     getAllTenants(input?: Nullable<TenantFilter>, pagination?: Nullable<Pagination>): Nullable<Nullable<Tenant>[]> | Promise<Nullable<Nullable<Tenant>[]>>;

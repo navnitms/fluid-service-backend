@@ -55,13 +55,12 @@ export class IncidentResolver {
   @Query()
   getAllIncidents(
     @Context('user') user: any,
-    @Args('tenantId') tenantId: string,
     @Args('pagination') pagination: Pagination,
     @Args('filter') filter: GetIncidentFilter,
   ): Promise<Incident[]> {
     const filteredtenantId =
       user.tenantId === configuration.defaultTenantId
-        ? tenantId
+        ? filter?.tenantId
         : user.tenantId;
     return this.incidentService.getIncidentByTenantId(
       filteredtenantId,
