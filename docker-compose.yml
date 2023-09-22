@@ -48,7 +48,7 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=AKIAEXAMPLE123
       - AWS_SECRET_ACCESS_KEY=AWSSECRETACCESSEY123
-      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_DEFAULT_REGION=ap-south-1
     entrypoint: /bin/sh -c
     command: >
       "

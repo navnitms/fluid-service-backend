@@ -1,0 +1,17 @@
+enum UploadType {
+  INCIDENT
+}
+
+type Upload {
+    id: ID!
+    url: String!
+}
+
+input PreSignedUrlInput {
+    name: String!
+    incidentId: ID!
+}
+
+type Mutation {
+    getPresignedUploadUrl(input: PreSignedUrlInput): Upload!
+}
