@@ -24,6 +24,8 @@ export const configuration = {
     s3Url: getEnvValue('AWS_S3_URL'),
     region: getEnvValue('AWS_S3_REGION', 'ap-south-1'),
     expiry: getNumericValue('AWS_EXPIRY'),
+    accessKey: getEnvValue('AWS_ACCESS_KEY_ID'),
+    secret: getEnvValue('AWS_SECRET_ACCESS_KEY'),
   },
   defaultTenantId: getEnvValue('DEFAULT_TENANT'),
 };

@@ -18,6 +18,7 @@ input CreateContractInput {
 
 type Contract {
   id: ID!
+  shortId: String!
   tenant: Tenant!
   startDate: DateTime!
   endDate: DateTime!

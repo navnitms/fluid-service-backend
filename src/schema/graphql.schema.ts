@@ -60,6 +60,10 @@ export enum Status {
     INACTIVE = "INACTIVE"
 }
 
+export enum UploadType {
+    INCIDENT = "INCIDENT"
+}
+
 export enum PermissionType {
     ViewAllIncidents = "ViewAllIncidents",
     AdminViewAllIncidents = "AdminViewAllIncidents",
@@ -197,6 +201,11 @@ export interface TenantNotesInput {
     remark: string;
 }
 
+export interface PreSignedUrlInput {
+    name: string;
+    incidentId: string;
+}
+
 export interface UserInput {
     name: string;
     email: string;
@@ -233,6 +242,7 @@ export interface IMutation {
     updateTenant(tenantId: string, input: UpdateTenantInput): Tenant | Promise<Tenant>;
     createTenantNotes(input: TenantNotesInput): Nullable<TenantNotes> | Promise<Nullable<TenantNotes>>;
     deleteTenantNotes(tenantNotesId: string): string | Promise<string>;
+    getPresignedUploadUrl(input?: Nullable<PreSignedUrlInput>): Upload | Promise<Upload>;
     createRole(name: UserRoles): Role | Promise<Role>;
     createUser(input: UserInput): Nullable<User> | Promise<Nullable<User>>;
     deleteUser(id: string): Nullable<string> | Promise<Nullable<string>>;
@@ -240,6 +250,7 @@ export interface IMutation {
 
 export interface Contract {
     id: string;
+    shortId: string;
     tenant: Tenant;
     startDate: DateTime;
     endDate: DateTime;
@@ -371,6 +382,11 @@ export interface TenantNotes {
     id: string;
     remark: string;
     createdAt?: Nullable<DateTime>;
+}
+
+export interface Upload {
+    id: string;
+    url: string;
 }
 
 export interface Role {
