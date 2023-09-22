@@ -7,22 +7,22 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AbstractEntity } from '../../common/models/AbstractEntity';
-import { Tenant } from './tenant.entity';
+import { Contract } from './contract.entity';
 
-@Index('idx_tenant_notes_tenant_id', ['tenantId'], {
+@Index('idx_contract_notes_contract_id', ['contractId'], {
   where: `"deleted_at" IS NULL`,
 })
 @Entity()
-export class TenantNotes extends AbstractEntity {
+export class ContractNotes extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   public id!: string;
 
   @Column()
-  public tenantId!: string;
+  public contractId!: string;
 
   @ManyToOne('Tenant', 'tenantNotes', { nullable: false })
   @JoinColumn({ referencedColumnName: 'id', name: 'tenant_id' })
-  public tenant!: Tenant;
+  public contract!: Contract;
 
   @Column({ length: 1024, nullable: false })
   public remark!: string;

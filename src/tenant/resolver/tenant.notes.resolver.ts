@@ -16,6 +16,14 @@ export class TenantNotesResolver {
     return this.tenantNotesService.createTenantNotes(tenantNotesInput);
   }
 
+  @Mutation()
+  async deleteTenantNotes(
+    @Args('input') tenantNoteId: string,
+  ): Promise<string> {
+    await this.tenantNotesService.deleteTenantNotes(tenantNoteId);
+    return 'Success';
+  }
+
   @Query()
   getTenantNotes(
     @Args('id', ParseUUIDPipe) tenantId: string,

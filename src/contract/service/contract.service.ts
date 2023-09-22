@@ -12,7 +12,7 @@ export class ContractService {
   constructor(private readonly dataSource: DataSource) {}
 
   async createContract(contractInput: CreateContractInput): Promise<Contract> {
-    const { contractProductIds, ...contractInputDetails } = contractInput;
+    const { contractProducts, ...contractInputDetails } = contractInput;
 
     const contract: DeepPartial<Contract> = {
       id: v4(),
@@ -24,11 +24,13 @@ export class ContractService {
     if (contractInputDetails.startDate <= new Date()) {
       contract.status = ContractStatus.ACTIVE;
     }
-    const contractProductData = contractInput.contractProductIds?.map(
-      (productId) => {
+    const contractProductData = contractInput.contractProducts?.map(
+      (contractProductInput) => {
         const contractProduct: DeepPartial<ContractProduct> = {
           contractId: contract.id,
-          productId,
+          productId: contractProductInput.productId,
+          count: contractProductInput.count,
+          productAmount: contractProductInput.productAmount,
         };
         return contractProduct;
       },
