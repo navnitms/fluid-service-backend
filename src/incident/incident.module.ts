@@ -14,6 +14,9 @@ import { ConfigService } from '@nestjs/config';
 import { AuthenticationModule } from 'src/auth/authentication.module';
 import CategoryLoader from './loader/category.loader';
 import { CategoryService } from './service/category.service';
+import { CategoryResolver } from './resolver/category.resolver';
+import { PriorityResolver } from './resolver/priority.resolver';
+import { IncidentStatusResolver } from './resolver/incident.status.resolver';
 
 @Module({
   imports: [CommonModule, UserModule, TenantModule, AuthenticationModule],
@@ -29,6 +32,9 @@ import { CategoryService } from './service/category.service';
     ConfigService,
     CategoryLoader,
     CategoryService,
+    CategoryResolver,
+    PriorityResolver,
+    IncidentStatusResolver,
   ],
   exports: [],
 })

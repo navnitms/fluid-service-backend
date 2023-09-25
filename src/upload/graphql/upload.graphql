@@ -5,6 +5,7 @@ enum UploadType {
 type Upload {
     id: ID!
     url: String!
+    name: String
 }
 
 input PreSignedUrlInput {

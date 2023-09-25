@@ -26,21 +26,6 @@ export enum ContractStatus {
     TERMINATED = "TERMINATED"
 }
 
-export enum Priority {
-    LOW = "LOW",
-    MEDIUM = "MEDIUM",
-    HIGH = "HIGH",
-    VERY_HIGH = "VERY_HIGH"
-}
-
-export enum IncidentStatus {
-    CREATED = "CREATED",
-    IN_PROGRESS = "IN_PROGRESS",
-    RESOLVED = "RESOLVED",
-    REOPENED = "REOPENED",
-    ASSIGNED = "ASSIGNED"
-}
-
 export enum IncidentOperation {
     INCIDENT_CREATED = "INCIDENT_CREATED",
     INCIDENT_UPDATED = "INCIDENT_UPDATED",
@@ -53,6 +38,20 @@ export enum IncidentOperation {
     INCIDENT_TITLE_UPDATED = "INCIDENT_TITLE_UPDATED",
     INCIDENT_DESCRIPTION_UPDATED = "INCIDENT_DESCRIPTION_UPDATED",
     INCIDENT_PRIORITY_UPDATED = "INCIDENT_PRIORITY_UPDATED"
+}
+
+export enum IncidentStatus {
+    CREATED = "CREATED",
+    IN_PROGRESS = "IN_PROGRESS",
+    RESOLVED = "RESOLVED",
+    REOPENED = "REOPENED"
+}
+
+export enum Priority {
+    LOW = "LOW",
+    MEDIUM = "MEDIUM",
+    HIGH = "HIGH",
+    VERY_HIGH = "VERY_HIGH"
 }
 
 export enum Status {
@@ -135,6 +134,7 @@ export interface CreateIncidentInput {
     description: string;
     priority: Priority;
     categoryId: string;
+    fileIds?: Nullable<Nullable<string>[]>;
 }
 
 export interface GetIncidentFilter {
@@ -264,9 +264,12 @@ export interface Contract {
 export interface IQuery {
     getAllContracts(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<Contract>[]> | Promise<Nullable<Nullable<Contract>[]>>;
     getContractNotes(id: string): Nullable<Nullable<ContractNotes>[]> | Promise<Nullable<Nullable<ContractNotes>[]>>;
+    getAllCategories(): Nullable<Nullable<Category>[]> | Promise<Nullable<Nullable<Category>[]>>;
     getCommentsForIncident(incidentId: string, pagination?: Nullable<Pagination>): Nullable<Comment>[] | Promise<Nullable<Comment>[]>;
     getAllIncidents(pagination?: Nullable<Pagination>, filter?: Nullable<GetIncidentFilter>): Nullable<Nullable<Incident>[]> | Promise<Nullable<Nullable<Incident>[]>>;
     getIncidentById(incidentId: string, tenantId?: Nullable<string>): Incident | Promise<Incident>;
+    getAllIncidentStatus(): Nullable<Nullable<string>[]> | Promise<Nullable<Nullable<string>[]>>;
+    getAllPriorities(): Nullable<Nullable<string>[]> | Promise<Nullable<Nullable<string>[]>>;
     getTenantDetails(id: string): Nullable<Tenant> | Promise<Nullable<Tenant>>;
     getAllTenants(input?: Nullable<TenantFilter>, pagination?: Nullable<Pagination>): Nullable<Nullable<Tenant>[]> | Promise<Nullable<Nullable<Tenant>[]>>;
     getTenantSummary(): TenantSummary | Promise<TenantSummary>;
@@ -324,6 +327,7 @@ export interface Incident {
     createdAt?: Nullable<DateTime>;
     deletedAt?: Nullable<DateTime>;
     logs?: Nullable<Nullable<IncidentLog>[]>;
+    files?: Nullable<Nullable<Upload>[]>;
 }
 
 export interface IncidentLog {
@@ -387,6 +391,7 @@ export interface TenantNotes {
 export interface Upload {
     id: string;
     url: string;
+    name?: Nullable<string>;
 }
 
 export interface Role {
