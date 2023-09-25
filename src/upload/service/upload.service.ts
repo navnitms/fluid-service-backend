@@ -6,7 +6,7 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { configuration } from '../../common/config/app.config';
-import { DataSource } from 'typeorm';
+import { DataSource, In } from 'typeorm';
 import { Upload } from '../entity/upload.entity';
 import { v4 } from 'uuid';
 import { FileService } from './file.service';
@@ -81,5 +81,11 @@ export class UploadService {
       Key: key,
     });
     return getSignedUrl(this.client, command, { expiresIn: 3600 });
+  }
+
+  async getUploadByReferenceId(ids: string[]): Promise<Upload[]> {
+    return this.dataSource.getRepository(Upload).find({
+      where: { referenceId: In(ids), status: UploadStatus.COMPLETED },
+    });
   }
 }

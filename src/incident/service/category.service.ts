@@ -16,4 +16,10 @@ export class CategoryService {
       withDeleted,
     });
   }
+
+  async getAllCategories(): Promise<Category[]> {
+    return this.dataSource.getRepository(Category).find({
+      where: { isVisible: true },
+    });
+  }
 }

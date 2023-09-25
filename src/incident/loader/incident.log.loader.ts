@@ -11,11 +11,11 @@ export class IncidentLogLoader {
     private readonly incidentLogService: IncidentLogService,
   ) {
     this.incidentLogLoader = new DataLoader<string, IncidentLog[]>(
-      this.getIncidentLogsByPollIds,
+      this.getIncidentLogsByIncidentIds,
     );
   }
 
-  getIncidentLogsByPollIds = async (incidentIds: readonly string[]) => {
+  getIncidentLogsByIncidentIds = async (incidentIds: readonly string[]) => {
     const incidentLogs =
       await this.incidentLogService.getIncidentLogByIncidentId([
         ...incidentIds,

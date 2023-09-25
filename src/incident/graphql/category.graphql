@@ -3,3 +3,7 @@ type Category {
     name: String!
     isVisible: Boolean!
 }
+
+type Query {
+    getAllCategories: [Category]
+}

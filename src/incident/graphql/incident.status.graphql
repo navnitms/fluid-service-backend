@@ -1,0 +1,10 @@
+enum IncidentStatus {
+  CREATED
+  IN_PROGRESS
+  RESOLVED
+  REOPENED
+}
+
+type Query {
+    getAllIncidentStatus: [String]
+}

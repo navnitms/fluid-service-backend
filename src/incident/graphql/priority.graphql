@@ -1,0 +1,10 @@
+enum Priority {
+    LOW
+    MEDIUM
+    HIGH
+    VERY_HIGH
+}
+
+type Query {
+    getAllPriorities: [String]
+}
