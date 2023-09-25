@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateProductInput } from 'src/schema/graphql.schema';
+import { CreateProductInput, Pagination } from 'src/schema/graphql.schema';
 import { DataSource, DeepPartial } from 'typeorm';
 import { Product } from '../entity/product.entity';
 import { v4 } from 'uuid';
@@ -32,13 +32,23 @@ export class ProductService {
       .getMany();
   }
 
-  async getAllProducts(offset: number, limit: number): Promise<Product[]> {
-    return this.dataSource
+  async getAllProducts(
+    searchTerm?: string,
+    pagination?: Pagination,
+  ): Promise<Product[]> {
+    const query = this.dataSource
       .getRepository(Product)
-      .createQueryBuilder('product')
-      .offset(offset)
-      .limit(limit)
-      .getMany();
+      .createQueryBuilder('product');
+    if (searchTerm) {
+      query.where('product.name Ilike :searchTerm', { searchTerm });
+    }
+    if (pagination?.offset) {
+      query.offset(pagination.offset);
+    }
+    if (pagination?.limit) {
+      query.limit(pagination.limit);
+    }
+    return query.getMany();
   }
 
   async deleteProduct(productId: string): Promise<void> {
