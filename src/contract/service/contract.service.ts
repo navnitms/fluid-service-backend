@@ -77,13 +77,18 @@ export class ContractService {
     limit?: number,
   ): Promise<Contract[]> {
     const contractRepo = this.dataSource.getRepository(Contract);
-    return contractRepo
+    const query = contractRepo
       .createQueryBuilder('contract')
       .where({ tenantId })
-      .orderBy('contract.endDate', 'DESC')
-      .offset(offset)
-      .limit(limit)
-      .getMany();
+      .orderBy('contract.endDate', 'DESC');
+    if (offset) {
+      query.offset(offset);
+    }
+    if (limit) {
+      query.limit(limit);
+    }
+    const test = await query.getMany();
+    return test;
   }
 
   private async getShortContractId(tenantId: string): Promise<string> {

@@ -11,6 +11,7 @@ import { Contract as ContractEntity } from '../entity/contract.entity';
 import { ContractService } from '../service/contract.service';
 import { CreateContractInput, Pagination } from 'src/schema/graphql.schema';
 import { ContractProductLoader } from '../loader/contract.product.loader';
+import TenantLoader from 'src/tenant/loader/tenant.loader';
 
 @Resolver('Contract')
 export class ContractResolver {
@@ -19,6 +20,8 @@ export class ContractResolver {
     private readonly contractService: ContractService,
     @Inject(ContractProductLoader)
     private readonly contractProductLoader: ContractProductLoader,
+    @Inject(TenantLoader)
+    private readonly tenantLoader: TenantLoader,
   ) {}
 
   @Mutation()
@@ -30,13 +33,13 @@ export class ContractResolver {
 
   @Query()
   getAllContracts(
-    @Args('tenantId') id: string,
-    @Args('pagination') pagination: Pagination,
+    @Args('tenantId') tenantId: string,
+    @Args('pagination') pagination?: Pagination,
   ): Promise<ContractEntity[]> {
     return this.contractService.getContractByTenantId(
-      '2fc6cb8f-0a91-4d51-864a-aac61b2bd25b',
-      pagination.offset,
-      pagination.limit,
+      tenantId,
+      pagination?.offset,
+      pagination?.limit,
     );
   }
 
@@ -45,5 +48,12 @@ export class ContractResolver {
     return this.contractProductLoader
       .getContractProductLoader()
       .load(contract.id);
+  }
+
+  @ResolveField()
+  async tenant(@Parent() contract: ContractEntity) {
+    if (contract.tenantId) {
+      return this.tenantLoader.getTenantsLoader().load(contract.tenantId);
+    }
   }
 }
