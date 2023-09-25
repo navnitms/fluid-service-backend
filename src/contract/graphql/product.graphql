@@ -11,3 +11,7 @@ input CreateProductInput {
 type Mutation {
 	createProduct(input: CreateProductInput!): Product
 }
+
+type Query {
+    getProducts(searchTerm: String, pagination: Pagination): [Product]
+}

@@ -264,6 +264,7 @@ export interface Contract {
 export interface IQuery {
     getAllContracts(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<Contract>[]> | Promise<Nullable<Nullable<Contract>[]>>;
     getContractNotes(id: string): Nullable<Nullable<ContractNotes>[]> | Promise<Nullable<Nullable<ContractNotes>[]>>;
+    getProducts(searchTerm?: Nullable<string>, pagination?: Nullable<Pagination>): Nullable<Nullable<Product>[]> | Promise<Nullable<Nullable<Product>[]>>;
     getAllCategories(): Nullable<Nullable<Category>[]> | Promise<Nullable<Nullable<Category>[]>>;
     getCommentsForIncident(incidentId: string, pagination?: Nullable<Pagination>): Nullable<Comment>[] | Promise<Nullable<Comment>[]>;
     getAllIncidents(pagination?: Nullable<Pagination>, filter?: Nullable<GetIncidentFilter>): Nullable<Nullable<Incident>[]> | Promise<Nullable<Nullable<Incident>[]>>;
