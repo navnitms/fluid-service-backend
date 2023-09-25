@@ -40,7 +40,7 @@ export class ProductService {
       .getRepository(Product)
       .createQueryBuilder('product');
     if (searchTerm) {
-      query.where('product.name like :searchTerm', { searchTerm });
+      query.where('product.name Ilike :searchTerm', { searchTerm });
     }
     if (pagination?.offset) {
       query.offset(pagination.offset);
