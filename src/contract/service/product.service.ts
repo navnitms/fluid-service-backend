@@ -13,10 +13,11 @@ export class ProductService {
   async createProduct(
     createProductInput: CreateProductInput,
   ): Promise<Product> {
-    const { name } = createProductInput;
+    const { name, amount } = createProductInput;
     const product: DeepPartial<Product> = {
       id: v4(),
       name,
+      amount,
     };
     const savedProduct = this.dataSource.getRepository(Product).save(product);
     return savedProduct;
@@ -58,5 +59,10 @@ export class ProductService {
       .from(Product)
       .where('id = :productId', { productId })
       .execute();
+  }
+
+  async updateProduct(id: string, amount: number) {
+    await this.dataSource.getRepository(Product).update(id, { amount });
+    return 'Success';
   }
 }

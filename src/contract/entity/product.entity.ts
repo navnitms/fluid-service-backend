@@ -23,6 +23,9 @@ export class Product extends AbstractEntity {
   @Column({ default: true })
   public isVisible!: boolean;
 
+  @Column({ nullable: true })
+  public amount?: number;
+
   @OneToMany(
     () => ContractProduct,
     (contractProduct) => contractProduct.product,

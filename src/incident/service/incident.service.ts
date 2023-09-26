@@ -187,4 +187,17 @@ export class IncidentService {
 
     return `${tenantSettings.shortCode}-${nextNumber}`;
   }
+
+  async getOpenIncidentCountByTenantId(): Promise<
+    { tenantId: string; openIncidentCount: number }[]
+  > {
+    return this.dataSource
+      .getRepository(Incident)
+      .createQueryBuilder('incident')
+      .select('incident.tenantId', 'tenantId')
+      .addSelect('COUNT(*)', 'openIncidentCount')
+      .where('incident.status = :status', { status: IncidentStatus.CREATED }) // Adjust based on your status field
+      .groupBy('incident.tenantId')
+      .getRawMany();
+  }
 }

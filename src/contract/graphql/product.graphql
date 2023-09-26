@@ -2,14 +2,18 @@ type Product {
     id: ID!
     name: String!
     isVisible: Boolean!
+    amount: Int
 }
 
 input CreateProductInput {
     name: String!
+    amount: Int
 }
 
 type Mutation {
 	createProduct(input: CreateProductInput!): Product
+    updateProduct(id: String!, amount: Int!): String
+
 }
 
 type Query {

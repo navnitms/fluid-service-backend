@@ -122,6 +122,7 @@ export interface ContractProductInput {
 
 export interface CreateProductInput {
     name: string;
+    amount?: Nullable<number>;
 }
 
 export interface CreateCommentInput {
@@ -236,6 +237,7 @@ export interface IMutation {
     createContractNotes(input: ContractNotesInput): ContractNotes | Promise<ContractNotes>;
     deleteContractNotes(contractNotesId: string): string | Promise<string>;
     createProduct(input: CreateProductInput): Nullable<Product> | Promise<Nullable<Product>>;
+    updateProduct(id: string, amount: number): Nullable<string> | Promise<Nullable<string>>;
     createComment(input: CreateCommentInput): Comment | Promise<Comment>;
     createIncident(input: CreateIncidentInput): Nullable<Incident> | Promise<Nullable<Incident>>;
     createTenant(input: TenantInput): Tenant | Promise<Tenant>;
@@ -298,6 +300,7 @@ export interface Product {
     id: string;
     name: string;
     isVisible: boolean;
+    amount?: Nullable<number>;
 }
 
 export interface Category {
