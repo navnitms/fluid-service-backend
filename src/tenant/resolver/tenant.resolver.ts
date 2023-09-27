@@ -19,6 +19,8 @@ import { Inject, ParseUUIDPipe } from '@nestjs/common';
 import { TenantSettingService } from '../service/tenant.setting.service';
 import { AddressService } from '../service/address.service';
 import { TenantNotesService } from '../service/tenant.note.service';
+import TenantCategoryLoader from '../loader/tenant.category.loader';
+import { Tenant as TenantEntity } from '../entity/tenant.entity';
 
 @Resolver('Tenant')
 export class TenantsResolver {
@@ -31,6 +33,8 @@ export class TenantsResolver {
     private readonly addressService: AddressService,
     @Inject(TenantNotesService)
     private readonly tenantNotesService: TenantNotesService,
+    @Inject(TenantCategoryLoader)
+    private readonly tenantCategoryLoader: TenantCategoryLoader,
   ) {}
 
   @Mutation()
@@ -83,5 +87,13 @@ export class TenantsResolver {
   async notes(@Parent() tenant: Tenant) {
     const settings = await this.tenantNotesService.getAllTenantNotes(tenant.id);
     return settings;
+  }
+
+  @ResolveField()
+  async category(@Parent() tenant: TenantEntity) {
+    const category = await this.tenantCategoryLoader
+      .getTenantCategorysLoader()
+      .load(tenant.categoryId);
+    return category;
   }
 }

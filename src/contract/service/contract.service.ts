@@ -72,15 +72,16 @@ export class ContractService {
   }
 
   async getContractByTenantId(
-    tenantId: string,
+    tenantId?: string,
     offset?: number,
     limit?: number,
   ): Promise<Contract[]> {
     const contractRepo = this.dataSource.getRepository(Contract);
-    const query = contractRepo
-      .createQueryBuilder('contract')
-      .where({ tenantId })
-      .orderBy('contract.endDate', 'DESC');
+    const query = contractRepo.createQueryBuilder('contract');
+    if (tenantId) {
+      query.where('contract.tenantId = :tenantId', { tenantId });
+    }
+    query.orderBy('contract.endDate', 'DESC');
     if (offset) {
       query.offset(offset);
     }

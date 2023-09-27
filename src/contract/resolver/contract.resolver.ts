@@ -33,7 +33,7 @@ export class ContractResolver {
 
   @Query()
   getAllContracts(
-    @Args('tenantId') tenantId: string,
+    @Args('tenantId') tenantId?: string,
     @Args('pagination') pagination?: Pagination,
   ): Promise<ContractEntity[]> {
     return this.contractService.getContractByTenantId(
@@ -41,6 +41,11 @@ export class ContractResolver {
       pagination?.offset,
       pagination?.limit,
     );
+  }
+
+  @Query()
+  getContract(@Args('id') id: string): Promise<ContractEntity> {
+    return this.contractService.getContractById(id);
   }
 
   @ResolveField()

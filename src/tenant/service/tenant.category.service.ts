@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, In } from 'typeorm';
 import { TenantCategory } from '../entity/tenant.category.entity';
 
 @Injectable()
@@ -13,5 +13,15 @@ export class TenantCategoryService {
       .getRepository(TenantCategory)
       .createQueryBuilder()
       .getMany();
+  }
+
+  async getTenantcategoryByIds(
+    ids: string[],
+    withDeleted = true,
+  ): Promise<TenantCategory[]> {
+    return this.dataSource.getRepository(TenantCategory).find({
+      where: { id: In(ids) },
+      withDeleted,
+    });
   }
 }

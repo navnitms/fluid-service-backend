@@ -9,6 +9,8 @@ import { DistrictResolver } from './resolver/district.resolver';
 import { TenantNotesResolver } from './resolver/tenant.notes.resolver';
 import { TenantNotesService } from './service/tenant.note.service';
 import TenantLoader from './loader/tenant.loader';
+import TenantCategoryLoader from './loader/tenant.category.loader';
+import { TenantCategoryService } from './service/tenant.category.service';
 
 @Module({
   imports: [CommonModule],
@@ -22,6 +24,8 @@ import TenantLoader from './loader/tenant.loader';
     TenantNotesResolver,
     TenantNotesService,
     TenantLoader,
+    TenantCategoryLoader,
+    TenantCategoryService,
   ],
   exports: [TenantLoader, TenantSettingService],
 })
