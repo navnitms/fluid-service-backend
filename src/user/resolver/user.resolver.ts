@@ -1,6 +1,5 @@
 import {
   Args,
-  Context,
   Mutation,
   Parent,
   Query,
@@ -10,6 +9,7 @@ import {
 import {
   Pagination,
   PermissionType,
+  UpdateUserInput,
   User,
   UserInput,
 } from 'src/schema/graphql.schema';
@@ -35,6 +35,14 @@ export class UserResolver {
   @Mutation()
   deleteUser(@Args('id', ParseUUIDPipe) userId: string): Promise<string> {
     return this.userService.deleteUser(userId);
+  }
+
+  @Mutation()
+  updateUser(
+    @Args('id', ParseUUIDPipe) userId: string,
+    @Args('input') userInput: UpdateUserInput,
+  ): Promise<User> {
+    return this.userService.updateUserDetails(userId, userInput);
   }
 
   @Permissions(PermissionType.AdminViewAllIncidents)

@@ -16,6 +16,7 @@ import {
   OperationType,
   Pagination,
   PermissionType,
+  UpdateUserInput,
   UserInput,
   UserRoles,
 } from 'src/schema/graphql.schema';
@@ -148,6 +149,22 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
     return userDetails;
+  }
+
+  async updateUserDetails(id: string, input: UpdateUserInput) {
+    if (input.password) {
+      input.password = await hash(input.password);
+    }
+    const repo = this.dataSource.getRepository(User);
+
+    const updateUserDetails = repo.create({
+      id,
+      name: input.name,
+      email: input.email,
+      password: input.password,
+    });
+
+    return this.dataSource.getRepository(User).save(updateUserDetails);
   }
 
   private async createUserSupportedRoleCheck(

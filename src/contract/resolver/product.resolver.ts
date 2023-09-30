@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, ParseUUIDPipe } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateProductInput, Pagination } from 'src/schema/graphql.schema';
 import { ProductService } from '../service/product.service';
@@ -24,6 +24,12 @@ export class ProductResolver {
     @Args('amount') amount: number,
   ): Promise<string> {
     return this.productService.updateProduct(id, amount);
+  }
+
+  @Mutation()
+  async deleteProduct(@Args('id', ParseUUIDPipe) id: string): Promise<string> {
+    await this.productService.deleteProduct(id);
+    return 'Success';
   }
 
   @Query()

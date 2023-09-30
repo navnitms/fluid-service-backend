@@ -31,9 +31,9 @@ input UpdateAddressInput {
 }
 
 input DistrictInput {
-  id: String
+  id: ID
 }
 
 input StateInput {
-  id: String
+  id: ID
 }

@@ -220,6 +220,12 @@ export interface UserInput {
     roleId: string;
 }
 
+export interface UpdateUserInput {
+    name?: Nullable<string>;
+    email?: Nullable<string>;
+    password?: Nullable<string>;
+}
+
 export interface Login {
     email?: Nullable<string>;
     password?: Nullable<string>;
@@ -243,6 +249,7 @@ export interface IMutation {
     deleteContractNotes(contractNotesId: string): string | Promise<string>;
     createProduct(input: CreateProductInput): Nullable<Product> | Promise<Nullable<Product>>;
     updateProduct(id: string, amount: number): Nullable<string> | Promise<Nullable<string>>;
+    deleteProduct(id: string): Nullable<string> | Promise<Nullable<string>>;
     createComment(input: CreateCommentInput): Comment | Promise<Comment>;
     createIncident(input: CreateIncidentInput): Nullable<Incident> | Promise<Nullable<Incident>>;
     createTenant(input: TenantInput): Tenant | Promise<Tenant>;
@@ -253,6 +260,7 @@ export interface IMutation {
     createRole(name: UserRoles): Role | Promise<Role>;
     createUser(input: UserInput): Nullable<User> | Promise<Nullable<User>>;
     deleteUser(id: string): Nullable<string> | Promise<Nullable<string>>;
+    updateUser(id: string, input?: Nullable<UpdateUserInput>): User | Promise<User>;
 }
 
 export interface Contract {

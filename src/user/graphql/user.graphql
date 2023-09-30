@@ -24,6 +24,12 @@ input UserInput {
     roleId: ID!
 }
 
+input UpdateUserInput {
+    name: String
+    email: String
+    password: String
+}
+
 input login {
   email: String
   password: String
@@ -49,6 +55,8 @@ type User {
 type Mutation {
 	createUser(input: UserInput!): User
   deleteUser(id: ID!): String
+  updateUser(id: ID!, input: UpdateUserInput): User!
+
 }
 
 type Query {

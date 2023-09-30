@@ -12,7 +12,9 @@ input CreateProductInput {
 
 type Mutation {
 	createProduct(input: CreateProductInput!): Product
-    updateProduct(id: String!, amount: Int!): String
+    updateProduct(id: ID!, amount: Int!): String
+    deleteProduct(id: ID!): String
+
 
 }
 
