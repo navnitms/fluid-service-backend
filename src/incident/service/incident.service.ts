@@ -1,4 +1,10 @@
-import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { DataSource, DeepPartial, EntityManager } from 'typeorm';
 import { Incident } from '../entity/incident.entity';
 import {
@@ -14,6 +20,7 @@ import { ConfigService } from '@nestjs/config';
 import { buildTsQueryTerm, getTsVector } from 'src/common/utils/ts.vector.util';
 import dbQuery from 'src/common/constants/db.query';
 import { TenantSettingService } from 'src/tenant/service/tenant.setting.service';
+import { IncidentLogService } from './incident.log.service';
 
 @Injectable()
 export class IncidentService {
@@ -24,6 +31,8 @@ export class IncidentService {
     private readonly configService: ConfigService,
     @Inject(TenantSettingService)
     private readonly tenantSettingService: TenantSettingService,
+    @Inject(IncidentLogService)
+    private readonly incidentLogService: IncidentLogService,
   ) {}
 
   async create(
@@ -130,17 +139,43 @@ export class IncidentService {
       .findOneOrFail({ where: { id, tenantId } });
   }
 
-  async assignIncident(incidentId: string, assigneeId: string) {
-    return this.dataSource
-      .getRepository(Incident)
-      .update(incidentId, { assigneeId });
+  async assignIncident(incidentId: string, assigneeId: string, userId: string) {
+    return this.dataSource.transaction(
+      async (transactionalEntityManager: EntityManager) => {
+        const repo = transactionalEntityManager.getRepository(Incident);
+        repo.save({ id: incidentId, assigneeId });
+      },
+    );
   }
 
   async acknowledgeIncident(incidentId: string, acknowldgerId: string) {
-    return this.dataSource.getRepository(Incident).update(incidentId, {
-      acknowledgedById: acknowldgerId,
-      status: IncidentStatus.IN_PROGRESS,
-    });
+    return this.dataSource.transaction(
+      async (transactionalEntityManager: EntityManager) => {
+        const repo = transactionalEntityManager.getRepository(Incident);
+        const incident = await repo.findOne({ where: { id: incidentId } });
+        if (!incident) {
+          throw new BadRequestException('Invalid Incident');
+        }
+        const updatedIncident = await transactionalEntityManager
+          .getRepository(Incident)
+          .save({
+            id: incidentId,
+            acknowledgedById: acknowldgerId,
+            status: IncidentStatus.IN_PROGRESS,
+          });
+
+        await this.incidentLogService.createIncidentLog(
+          {
+            userId: acknowldgerId,
+            incidentId,
+            operation: IncidentOperation.INCIDENT_ACKNOWLEDGED,
+          },
+          transactionalEntityManager,
+        );
+
+        return updatedIncident;
+      },
+    );
   }
 
   async resolveIncident(incidentId: string, userId: string, tenantId: string) {

@@ -7,7 +7,14 @@ type ContractProduct {
 }
 
 input ContractProductInput {
-    productId: String!
+    productId: ID!
+    remark: String
+    count: Int
+    productAmount: Int
+}
+
+input EditContractProductInput {
+    productId: ID
     remark: String
     count: Int
     productAmount: Int

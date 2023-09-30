@@ -29,8 +29,6 @@ export enum ContractStatus {
 export enum IncidentOperation {
     INCIDENT_CREATED = "INCIDENT_CREATED",
     INCIDENT_UPDATED = "INCIDENT_UPDATED",
-    INCIDENT_ESCALATED = "INCIDENT_ESCALATED",
-    INCIDENT_ADMIN_ACKNOWLEDGED = "INCIDENT_ADMIN_ACKNOWLEDGED",
     INCIDENT_ACKNOWLEDGED = "INCIDENT_ACKNOWLEDGED",
     INCIDENT_RESOLVED = "INCIDENT_RESOLVED",
     INCIDENT_REOPENED = "INCIDENT_REOPENED",
@@ -115,6 +113,13 @@ export interface ContractNotesInput {
 
 export interface ContractProductInput {
     productId: string;
+    remark?: Nullable<string>;
+    count?: Nullable<number>;
+    productAmount?: Nullable<number>;
+}
+
+export interface EditContractProductInput {
+    productId?: Nullable<string>;
     remark?: Nullable<string>;
     count?: Nullable<number>;
     productAmount?: Nullable<number>;

@@ -1,7 +1,11 @@
 import { IncidentOperation } from 'src/schema/graphql.schema';
 
 export interface IncidentLogInput {
-  incidetId: string;
+  incidentId: string;
   userId: string;
   operation: IncidentOperation;
+}
+
+export interface IncidentLogDataInput {
+  assigneeId: string;
 }
