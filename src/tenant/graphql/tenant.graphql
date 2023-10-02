@@ -23,11 +23,6 @@ type Tenant {
   notes: [TenantNotes]
 }
 
-type TenantSummary {
-    TOTAL_COUNT: Int
-    ACTIVE: Int
-	INACTIVE: Int
-}
 
 input TenantInput {
   name: String!

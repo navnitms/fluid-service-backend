@@ -1,0 +1,22 @@
+type IncidentStatusCount {
+    OPEN: Int!
+    IN_PROGRESS: Int!
+    CLOSED: Int!
+}
+
+type TenantSummary {
+    TOTAL_COUNT: Int
+    ACTIVE: Int
+	INACTIVE: Int
+}
+
+type ProductSummary {
+    product: Product
+    count: Int
+}
+
+type Query {
+    getIncidentStatuses: IncidentStatusCount!
+    getTenantSummary: TenantSummary!
+    getProductSummary: [ProductSummary]!
+}

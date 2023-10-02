@@ -7,6 +7,8 @@ import { ProductResolver } from './resolver/product.resolver';
 import { ContractProductService } from './service/contract.product.service';
 import { ContractProductLoader } from './loader/contract.product.loader';
 import { TenantModule } from 'src/tenant/tenant.module';
+import { ProductSummaryresolver } from './resolver/product.summary.resolver';
+import ProductLoader from './loader/product.loader';
 
 @Module({
   imports: [CommonModule, TenantModule],
@@ -15,10 +17,12 @@ import { TenantModule } from 'src/tenant/tenant.module';
     ContractResolver,
     ProductService,
     ProductResolver,
+    ProductSummaryresolver,
     ContractProductLoader,
     ContractProductService,
     ContractProductLoader,
+    ProductLoader,
   ],
-  exports: [],
+  exports: [ContractProductService],
 })
 export class ContractModule {}

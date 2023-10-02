@@ -36,6 +36,6 @@ import { IncidentStatusResolver } from './resolver/incident.status.resolver';
     PriorityResolver,
     IncidentStatusResolver,
   ],
-  exports: [],
+  exports: [IncidentService],
 })
 export class IncidentModule {}

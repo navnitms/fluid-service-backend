@@ -12,6 +12,7 @@ import {
   GetIncidentFilter,
   IncidentOperation,
   IncidentStatus,
+  IncidentStatusCount,
   Pagination,
 } from 'src/schema/graphql.schema';
 import { IncidentLog } from '../entity/incident.log.entity';
@@ -234,5 +235,40 @@ export class IncidentService {
       .where('incident.status = :status', { status: IncidentStatus.CREATED }) // Adjust based on your status field
       .groupBy('incident.tenantId')
       .getRawMany();
+  }
+
+  async getIncidentCountByStatus(em?: EntityManager) {
+    const repo = em
+      ? em.getRepository(Incident)
+      : this.dataSource.getRepository(Incident);
+
+    const details: IncidentStatusCount = {
+      OPEN: 0,
+      IN_PROGRESS: 0,
+      CLOSED: 0,
+    };
+    const incidentCounts = await repo
+      .createQueryBuilder('incident')
+      .select('incident.status', 'status')
+      .addSelect('COUNT(*)', 'incident_count')
+      .groupBy('incident.status')
+      .getRawMany();
+
+    await Promise.all(
+      incidentCounts.map((incidentCount) => {
+        if (
+          incidentCount.status === IncidentStatus.CREATED ||
+          incidentCount.status === IncidentStatus.REOPENED
+        ) {
+          details.OPEN += incidentCount.incident_count;
+        } else if (incidentCount.status === IncidentStatus.IN_PROGRESS) {
+          details.IN_PROGRESS = incidentCount.incident_count;
+        } else if (incidentCount.status === IncidentStatus.RESOLVED) {
+          details.CLOSED = incidentCount.incident_count;
+        }
+      }),
+    );
+
+    return details;
   }
 }

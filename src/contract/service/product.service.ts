@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateProductInput, Pagination } from 'src/schema/graphql.schema';
-import { DataSource, DeepPartial } from 'typeorm';
+import { DataSource, DeepPartial, In } from 'typeorm';
 import { Product } from '../entity/product.entity';
 import { v4 } from 'uuid';
 
@@ -64,5 +64,12 @@ export class ProductService {
   async updateProduct(id: string, amount: number) {
     await this.dataSource.getRepository(Product).update(id, { amount });
     return 'Success';
+  }
+
+  async getProuctByIds(ids: string[], withDeleted = true): Promise<Product[]> {
+    return this.dataSource.getRepository(Product).find({
+      where: { id: In(ids) },
+      withDeleted,
+    });
   }
 }

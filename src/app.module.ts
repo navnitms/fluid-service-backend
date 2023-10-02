@@ -9,6 +9,7 @@ import { IncidentModule } from './incident/incident.module';
 import { ContractModule } from './contract/contract.module';
 import { AuthenticationModule } from './auth/authentication.module';
 import { UploadModule } from './upload/upload.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UploadModule } from './upload/upload.module';
     ContractModule,
     AuthenticationModule,
     UploadModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [],

@@ -27,6 +27,6 @@ import { TenantCategoryService } from './service/tenant.category.service';
     TenantCategoryLoader,
     TenantCategoryService,
   ],
-  exports: [TenantLoader, TenantSettingService],
+  exports: [TenantLoader, TenantSettingService, TenantService],
 })
 export class TenantModule {}

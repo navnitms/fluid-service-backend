@@ -281,6 +281,9 @@ export interface IQuery {
     getContract(id: string): Contract | Promise<Contract>;
     getContractNotes(id: string): Nullable<Nullable<ContractNotes>[]> | Promise<Nullable<Nullable<ContractNotes>[]>>;
     getProducts(searchTerm?: Nullable<string>, pagination?: Nullable<Pagination>): Nullable<Nullable<Product>[]> | Promise<Nullable<Nullable<Product>[]>>;
+    getIncidentStatuses(): IncidentStatusCount | Promise<IncidentStatusCount>;
+    getTenantSummary(): TenantSummary | Promise<TenantSummary>;
+    getProductSummary(): Nullable<ProductSummary>[] | Promise<Nullable<ProductSummary>[]>;
     getAllCategories(): Nullable<Nullable<Category>[]> | Promise<Nullable<Nullable<Category>[]>>;
     getCommentsForIncident(incidentId: string, pagination?: Nullable<Pagination>): Nullable<Comment>[] | Promise<Nullable<Comment>[]>;
     getAllIncidents(pagination?: Nullable<Pagination>, filter?: Nullable<GetIncidentFilter>): Nullable<Nullable<Incident>[]> | Promise<Nullable<Nullable<Incident>[]>>;
@@ -289,7 +292,6 @@ export interface IQuery {
     getAllPriorities(): Nullable<Nullable<string>[]> | Promise<Nullable<Nullable<string>[]>>;
     getTenantDetails(id: string): Nullable<Tenant> | Promise<Nullable<Tenant>>;
     getAllTenants(input?: Nullable<TenantFilter>, pagination?: Nullable<Pagination>): Nullable<Nullable<Tenant>[]> | Promise<Nullable<Nullable<Tenant>[]>>;
-    getTenantSummary(): TenantSummary | Promise<TenantSummary>;
     getTenantNotes(id: string): Nullable<Nullable<TenantNotes>[]> | Promise<Nullable<Nullable<TenantNotes>[]>>;
     getAllRoles(): Nullable<Role>[] | Promise<Nullable<Role>[]>;
     getAllUsers(tenantId: string, pagination?: Nullable<Pagination>): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
@@ -315,6 +317,23 @@ export interface Product {
     name: string;
     isVisible: boolean;
     amount?: Nullable<number>;
+}
+
+export interface IncidentStatusCount {
+    OPEN: number;
+    IN_PROGRESS: number;
+    CLOSED: number;
+}
+
+export interface TenantSummary {
+    TOTAL_COUNT?: Nullable<number>;
+    ACTIVE?: Nullable<number>;
+    INACTIVE?: Nullable<number>;
+}
+
+export interface ProductSummary {
+    product?: Nullable<Product>;
+    count?: Nullable<number>;
 }
 
 export interface Category {
@@ -392,12 +411,6 @@ export interface Tenant {
     address?: Nullable<Address>;
     settings?: Nullable<TenantSettings>;
     notes?: Nullable<Nullable<TenantNotes>[]>;
-}
-
-export interface TenantSummary {
-    TOTAL_COUNT?: Nullable<number>;
-    ACTIVE?: Nullable<number>;
-    INACTIVE?: Nullable<number>;
 }
 
 export interface TenantNotes {
