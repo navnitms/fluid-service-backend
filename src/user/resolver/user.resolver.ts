@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -17,6 +18,7 @@ import { User as UserEntity } from '../entity/user.entity';
 import { UserService } from '../service/user.service';
 import { Inject, ParseUUIDPipe } from '@nestjs/common';
 import UserRoleLoader from '../loader/user.role.loader';
+import { configuration } from 'src/common/config/app.config';
 import { Permissions } from 'src/auth/decorator/permission.decorator';
 
 @Resolver('User')
@@ -45,13 +47,16 @@ export class UserResolver {
     return this.userService.updateUserDetails(userId, userInput);
   }
 
-  @Permissions(PermissionType.AdminViewAllIncidents)
+  @Permissions(PermissionType.ViewAllIncidents)
   @Query()
   getAllUsers(
+    @Context('user') user: any,
     @Args('tenantId') id: string,
     @Args('pagination') pagination: Pagination,
   ): Promise<User[]> {
-    return this.userService.getUsersByTenantId(id, pagination);
+    const filteredtenantId =
+      user.tenantId === configuration.defaultTenantId ? id : user.tenantId;
+    return this.userService.getUsersByTenantId(filteredtenantId, pagination);
   }
 
   @Query()

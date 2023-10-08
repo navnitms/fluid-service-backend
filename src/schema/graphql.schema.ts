@@ -57,6 +57,11 @@ export enum Status {
     INACTIVE = "INACTIVE"
 }
 
+export enum TenantStatus {
+    INACTIVE = "INACTIVE",
+    ACTIVE = "ACTIVE"
+}
+
 export enum UploadType {
     INCIDENT = "INCIDENT"
 }
@@ -411,6 +416,7 @@ export interface Tenant {
     address?: Nullable<Address>;
     settings?: Nullable<TenantSettings>;
     notes?: Nullable<Nullable<TenantNotes>[]>;
+    status?: Nullable<TenantStatus>;
 }
 
 export interface TenantNotes {

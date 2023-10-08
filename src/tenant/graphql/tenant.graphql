@@ -14,6 +14,11 @@ type TenantSettings {
 	autoEscalation: Boolean
 }
 
+enum TenantStatus {
+  INACTIVE
+  ACTIVE
+}
+
 type Tenant {
   id: ID!
   name: String!
@@ -21,6 +26,7 @@ type Tenant {
 	address: Address
   settings: TenantSettings
   notes: [TenantNotes]
+  status: TenantStatus
 }
 
 
